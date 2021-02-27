@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Weather Forecast</string>
+    <string name="humidityLbl">Humidity:</string>
+    <string name="windLbl">Wind:</string>
+    <string name="pressureLbl">Pressure:</string>
+    <string name="rainLbl">Rain:</string>
+    <string name="cloudsLbl">Clouds:</string>
 </resources>
