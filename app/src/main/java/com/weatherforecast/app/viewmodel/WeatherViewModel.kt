@@ -14,14 +14,14 @@ class WeatherViewModel: ViewModel() {
     private val loading = MutableLiveData<Boolean>()
     private val error = MutableLiveData<String>()
 
-    fun getData(lat: Double, lon: Double, exclude: String, appId: String) {
+    fun getData(lat: Double, lon: Double, units: String, exclude: String, lang: String, appId: String) {
         loading.postValue(true)
         val coroutineExceptionHandler = CoroutineExceptionHandler{  _, th ->
             error.postValue(th.localizedMessage)
             loading.postValue(false)
         }
         CoroutineScope(Dispatchers.IO + coroutineExceptionHandler).launch {
-            val response = WeatherService.getWeatherService().getWeatherInfo(lat, lon, exclude, appId)
+            val response = WeatherService.getWeatherService().getWeatherInfo(lat, lon, units, exclude, lang, appId)
             withContext(Dispatchers.Main){
                 loading.postValue(false)
                 if(response.isSuccessful){
