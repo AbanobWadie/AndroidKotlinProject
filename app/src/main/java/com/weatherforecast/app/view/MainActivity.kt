@@ -7,29 +7,29 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.weatherforecast.app.R
-import com.weatherforecast.app.model.Daily
 import com.weatherforecast.app.model.WeatherInfo
 import com.weatherforecast.app.viewmodel.WeatherViewModel
-import java.text.SimpleDateFormat
-import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity() : AppCompatActivity() {
 
     lateinit var weatherRecyclerView: RecyclerView
     lateinit var loading: ProgressBar
@@ -41,6 +41,8 @@ class MainActivity : AppCompatActivity() {
     private var lon = 0.0F
     private var unit = String()
     private var language = String()
+
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -49,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         loading = findViewById(R.id.progressBar)
         val btn: Button = findViewById(R.id.settingBtn)
         btn.setOnClickListener {
-            val intent = Intent(this,SettingsActivity::class.java)
+            val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
         }
 
@@ -57,6 +59,19 @@ class MainActivity : AppCompatActivity() {
         observeViewModel(viewModel)
 
         initRecyclerViewList()
+
+
+        val intent = Intent(this, AlertService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        }else{
+            startService(intent)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(this)) {
+            askPermission()
+        }
+
     }
 
     override fun onResume() {
@@ -93,7 +108,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setData(data: WeatherInfo) {
-        weatherRecyclerViewAdapter.updateList(data.daily, data.timezone)
+        weatherRecyclerViewAdapter.updateList(data.daily!!, data.timezone)
         Log.i("call", data.timezone)
         println(data)
     }
@@ -114,8 +129,10 @@ class MainActivity : AppCompatActivity() {
         builder.setMessage(msg)
 
         builder.setPositiveButton("OK") { _, _ ->
-            Toast.makeText(applicationContext,
-                    "OK", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                "OK", Toast.LENGTH_SHORT
+            ).show()
         }
 
 //        builder.setNegativeButton("No") { dialog, which ->
@@ -161,20 +178,30 @@ class MainActivity : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
-                        this,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        PERMISSION_REQUEST_ACCESS_FINE_LOCATION)
+                    this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    100
+                )
                 return
             }
-            locationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-        } catch (ex:SecurityException) {
+            locationManager!!.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                0L,
+                0f,
+                locationListener
+            )
+        } catch (ex: SecurityException) {
             Toast.makeText(applicationContext, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_REQUEST_ACCESS_FINE_LOCATION) {
+        if (requestCode == 100) {
             when (grantResults[0]) {
                 PackageManager.PERMISSION_GRANTED -> getLocation()
                 PackageManager.PERMISSION_DENIED -> showError("Please, give us permission to access your Location")
@@ -182,7 +209,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private const val PERMISSION_REQUEST_ACCESS_FINE_LOCATION = 100
+    private fun askPermission() {
+        AlertDialog.Builder(this)
+            .setTitle("Permission")
+            .setMessage("You must let the App to display content overlay the other Apps to can use all its function")
+            .setPositiveButton(
+                android.R.string.yes
+            ) { dialog, which ->
+                val intent = Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + this.packageName)
+                )
+                startActivityForResult(intent, 0)
+            }
+            .setNegativeButton(android.R.string.no, null)
+            .setIcon(android.R.drawable.ic_dialog_alert)
+            .show()
     }
 }

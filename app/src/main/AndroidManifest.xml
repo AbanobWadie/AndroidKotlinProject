@@ -5,6 +5,11 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.INTERNAL_SYSTEM_WINDOW"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
 
     <application
         android:allowBackup="true"
@@ -15,11 +20,18 @@
         android:theme="@style/Theme.WeatherForecast"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
+        <service
+            android:name=".view.AlertService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false"/>
+
+        <activity android:name=".view.AlertActivity" />
         <activity
             android:name=".view.SettingsActivity"
-            android:label="@string/title_activity_settings">
-        </activity>
-        <activity android:name=".view.MainActivity"
+            android:label="@string/title_activity_settings" />
+        <activity
+            android:name=".view.MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
