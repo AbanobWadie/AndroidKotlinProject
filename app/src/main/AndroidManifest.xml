@@ -8,8 +8,8 @@
     <uses-permission
         android:name="android.permission.INTERNAL_SYSTEM_WINDOW"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -20,18 +20,22 @@
         android:theme="@style/Theme.WeatherForecast"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
+        <activity android:name=".view.alert.AddAlertActivity"></activity>
+
         <service
-            android:name=".view.AlertService"
+            android:name=".view.alert.AlertService"
             android:enabled="true"
             android:exported="true"
-            android:stopWithTask="false"/>
+            android:stopWithTask="false" />
 
-        <activity android:name=".view.AlertActivity" />
+        <activity android:name=".view.alert.AlertActivity">
+
+        </activity>
         <activity
-            android:name=".view.SettingsActivity"
+            android:name=".view.settings.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".view.MainActivity"
+            android:name=".view.main.MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

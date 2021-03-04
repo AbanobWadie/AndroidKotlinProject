@@ -1,11 +1,12 @@
-package com.weatherforecast.app.model
+package com.weatherforecast.app.model.datasource.internal
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.weatherforecast.app.model.Alert
 
-@Database(entities = [Alert::class], version = 1)
+//@Database(entities = [Alert::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun alertDao(): AlertDao
 

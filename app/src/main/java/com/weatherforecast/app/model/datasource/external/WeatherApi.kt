@@ -1,10 +1,9 @@
-package com.weatherforecast.app.model
+package com.weatherforecast.app.model.datasource.external
 
+import com.weatherforecast.app.model.WeatherInfo
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.QueryName
 
 interface WeatherApi {
     @GET("onecall")

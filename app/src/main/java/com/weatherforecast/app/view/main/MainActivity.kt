@@ -1,4 +1,4 @@
-package com.weatherforecast.app.view
+package com.weatherforecast.app.view.main
 
 import android.Manifest
 import android.app.AlertDialog
@@ -27,6 +27,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.WeatherInfo
+import com.weatherforecast.app.view.alert.AlertActivity
+import com.weatherforecast.app.view.settings.SettingsActivity
+import com.weatherforecast.app.view.alert.AlertService
 import com.weatherforecast.app.viewmodel.WeatherViewModel
 
 class MainActivity() : AppCompatActivity() {
@@ -49,9 +52,14 @@ class MainActivity() : AppCompatActivity() {
 
         weatherRecyclerView = findViewById(R.id.recyclerView)
         loading = findViewById(R.id.progressBar)
-        val btn: Button = findViewById(R.id.settingBtn)
-        btn.setOnClickListener {
+        val settingsBtn: Button = findViewById(R.id.settingBtn)
+        settingsBtn.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        val alertBtn: Button = findViewById(R.id.alertBtn)
+        alertBtn.setOnClickListener {
+            val intent = Intent(this, AlertActivity::class.java)
             startActivity(intent)
         }
 
@@ -71,7 +79,6 @@ class MainActivity() : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(this)) {
             askPermission()
         }
-
     }
 
     override fun onResume() {

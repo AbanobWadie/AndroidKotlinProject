@@ -1,4 +1,4 @@
-package com.weatherforecast.app.view
+package com.weatherforecast.app.view.settings
 
 import android.app.Activity
 import android.content.Intent

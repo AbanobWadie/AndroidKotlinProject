@@ -1,16 +1,15 @@
-package com.weatherforecast.app.view
+package com.weatherforecast.app.view.alert
 
 import android.app.*
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.os.IBinder
-import android.os.Message
 import android.os.SystemClock
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import com.weatherforecast.app.R
+import com.weatherforecast.app.model.Day
 
 
 class AlertService : Service() {

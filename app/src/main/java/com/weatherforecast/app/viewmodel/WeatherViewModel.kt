@@ -1,11 +1,10 @@
 package com.weatherforecast.app.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.weatherforecast.app.model.WeatherInfo
-import com.weatherforecast.app.model.WeatherService
+import com.weatherforecast.app.model.datasource.external.WeatherService
 import kotlinx.coroutines.*
 
 class WeatherViewModel: ViewModel() {

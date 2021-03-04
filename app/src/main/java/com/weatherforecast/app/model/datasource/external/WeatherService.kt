@@ -1,4 +1,4 @@
-package com.weatherforecast.app.model
+package com.weatherforecast.app.model.datasource.external
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

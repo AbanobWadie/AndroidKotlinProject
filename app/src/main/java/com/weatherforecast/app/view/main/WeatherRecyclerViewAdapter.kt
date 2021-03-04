@@ -1,4 +1,4 @@
-package com.weatherforecast.app.view
+package com.weatherforecast.app.view.main
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,7 +13,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Daily
-import kotlinx.coroutines.currentCoroutineContext
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime

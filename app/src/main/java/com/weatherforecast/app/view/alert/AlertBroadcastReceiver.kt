@@ -1,4 +1,4 @@
-package com.weatherforecast.app.view
+package com.weatherforecast.app.view.alert
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -13,15 +13,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
-import androidx.preference.PreferenceManager
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.WeatherInfo
-import com.weatherforecast.app.model.WeatherService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
 
 
 class AlertBroadcastReceiver: BroadcastReceiver() {
