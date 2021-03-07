@@ -33,4 +33,16 @@
         <item>en</item>
         <item>ar</item>
     </string-array>
+
+    <!-- alert event -->
+    <string-array name="alertEvent">
+        <item>Temp</item>
+        <item>Wind</item>
+    </string-array>
+
+    <!-- alert type -->
+    <string-array name="alertType">
+        <item>Alarm</item>
+        <item>Notification</item>
+    </string-array>
 </resources>

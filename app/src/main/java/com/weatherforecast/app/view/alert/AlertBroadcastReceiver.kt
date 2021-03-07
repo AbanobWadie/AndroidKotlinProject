@@ -14,7 +14,13 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import com.weatherforecast.app.R
+import com.weatherforecast.app.model.Alert
 import com.weatherforecast.app.model.WeatherInfo
+import com.weatherforecast.app.model.datasource.external.WeatherService
+import com.weatherforecast.app.model.datasource.internal.AlertDao
+import com.weatherforecast.app.model.datasource.internal.AppDatabase
+import kotlinx.coroutines.*
+import java.util.*
 
 
 class AlertBroadcastReceiver: BroadcastReceiver() {
@@ -22,38 +28,72 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
         Log.i("call", "11111111111111111111111111111111111111111111111111")
         when (p1?.action) {
             //ACTION_DATE_CHANGED  -> getAlert()
-            ACTION_TIME_TICK -> getAlert(p0!!)
+            ACTION_TIME_TICK -> getDatabaseAlert(p0!!)
         }
     }
 
-    private fun getAlert(context: Context) {
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val response = WeatherService.getWeatherService().getWeatherInfo(33.441792, -94.037689, "metric", "current,minutely,hourly,daily", "en", "67bc71589f11ab9e108b887f0bab9bfc")
-//            withContext(Dispatchers.Main){
-//                if(response.isSuccessful){
-//                    val alertInfo = response.body()!!
-//                    println(alertInfo.lat)
-//                    //checkAlert(alertInfo, context)
-//                    showAlert(context, "Alert", "alertInfo.alert!![0].description", "Yes", "No")
-//                }
-//            }
+    private fun getApiAlert(context: Context ,databaseData: List<Alert>) {
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = WeatherService.getWeatherService().getWeatherInfo(33.441792, -94.037689, "metric", "current,minutely,hourly,daily", "en", "67bc71589f11ab9e108b887f0bab9bfc")
+            withContext(Dispatchers.Main){
+                if(response.isSuccessful){
+                    if(!response.body()!!.alert.isNullOrEmpty()) {
+                        val data = response.body()!!.alert!!
+                        checkAlert(context, databaseData, data)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getDatabaseAlert(context: Context) {
+//        val db: AppDatabase = AppDatabase.getDatabase(context.applicationContext)!!
+//        val alertDao: AlertDao = db.alertDao()
+//
+//        val calendar = Calendar.getInstance()
+//        val currentTime = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
+//        val data = alertDao.getSome(currentTime, true)
+//
+//        if(!data.isNullOrEmpty()){
+//            getApiAlert(context, data)
 //        }
     }
 
-    private fun checkAlert(data: WeatherInfo, context: Context) {
-//        if(data.alert != null){
-//            for (alert in data.alert) {
-//                if(alert.event == alertEvent) {
-//                    var start = java.util.Date(alert.start - 3600 * 12000)
-//                    var end = java.util.Date(alert.end - 3600 * 12000)
-//
-//                    if((startAlert >= sdf.format(start) && startAlert <= alert.end) || (endAlert >= alert.start && endAlert <= alert.end)){
-//                        showAlert(context, "Alert", data.alert[0].description, "Yes", "No")
-//                    }
-//
-//                }
-//            }
-//        }
+    private fun checkAlert(context: Context, databaseAlertInfo: List<Alert>, apiAlertInfo: List<Alert>) {
+        val calendar = Calendar.getInstance()
+        val currentDay = "${calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)}"
+
+        for (api in apiAlertInfo){
+            for (db in databaseAlertInfo){
+                if(api.alertEvent == db.alertEvent) {
+                    if (db.alertDay.contains(currentDay) || db.alertDay == "ALL" || (db.alertDay == "WEEKEND" && (currentDay == "FRI" || currentDay == "SAT"))) {
+                        if (db.alertType == "Alarm"){
+                            showAlert(context, api.alertEvent, api.description, "Yes", "No")
+                        }else{
+
+                        }
+                    } else if (db.alertDay == "NONE") {
+                        if (db.alertType == "Alarm"){
+                            showAlert(context, api.alertEvent, api.description, "Yes", "No")
+                        }else{
+
+                        }
+
+                        db.enabled = false
+                        changeEnable(context, db)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun changeEnable(context: Context, alert: Alert) {
+        val db: AppDatabase = AppDatabase.getDatabase(context.applicationContext)!!
+        val alertDao: AlertDao = db.alertDao()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            alertDao.insert(alert)
+        }
     }
 
     private fun showAlert(context: Context, title: String?, body: String?, yes: String?, no: String?) {

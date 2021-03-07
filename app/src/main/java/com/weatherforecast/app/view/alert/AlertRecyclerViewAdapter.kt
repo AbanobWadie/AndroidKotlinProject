@@ -1,13 +1,16 @@
 package com.weatherforecast.app.view.alert
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
@@ -59,19 +62,19 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
             alertTypeLbl.text = alert.alertType
             alertSwitch.isChecked = alert.enabled
 
-            val str = StringBuilder()
-            if(alert.alertDay.size == 1 && alert.alertDay[0] == Day.ALL){
+            //val str = StringBuilder()
+            if(alert.alertDay  == "ALL"){
                 alertDayLbl.text = "Every Day"
-            }else if (alert.alertDay.size == 1 && alert.alertDay[0] == Day.WEEKEND){
+            }else if (alert.alertDay == "WEEKEND"){
                 alertDayLbl.text = "Every Weekend"
-            }else if (alert.alertDay.size == 1 && alert.alertDay[0] == Day.NONE){
+            }else if (alert.alertDay == "NONE"){
                 alertDayLbl.text = "No Repeat"
             }else{
-                for (day in alert.alertDay){
-                    str.append("$day,")
-                }
-                str.deleteCharAt(str.lastIndex)
-                alertDayLbl.text = str
+//                for (day in alert.alertDay){
+//                    str.append("$day,")
+//                }
+//                str.deleteCharAt(str.lastIndex)
+                alertDayLbl.text = alert.alertDay
             }
 
             alertSwitch.setOnDragListener {_, dragEvent ->
@@ -81,13 +84,25 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
             }
 
             updateButton.setOnClickListener {
-                //adapter.viewModel.getSome(alert.alertTime, alert.enabled)
+                val intent = Intent(adapter.context, AddAlertActivity::class.java)
+                intent.putExtra("status", "update")
+                intent.putExtra("alert", alert)
+                adapter.context.startActivity(intent)
             }
 
             deleteButton.setOnClickListener {
-                //adapter.viewModel.delete(alert)
-                adapter.alertData.remove(alert)
-                adapter.notifyDataSetChanged()
+                val builder = AlertDialog.Builder(adapter.context)
+                builder.setTitle("Warning")
+                builder.setMessage("Are you sure you want delete this?")
+
+                builder.setPositiveButton("Yes") { _, _ ->
+                    //adapter.viewModel.delete(alert)
+                    adapter.alertData.remove(alert)
+                    adapter.notifyDataSetChanged()
+                }
+
+                builder.setNegativeButton("No", null)
+                builder.show()
             }
         }
     }
