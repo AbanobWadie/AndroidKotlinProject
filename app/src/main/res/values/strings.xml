@@ -23,6 +23,7 @@
 
     <!-- Unit Preferences -->
     <string name="language_title">Default language</string>
+
     <string name="noBtn">No</string>
     <string name="yesBtn">Yes</string>
     <string name="alertEventHint">Alert Event</string>
@@ -30,6 +31,7 @@
     <string name="alertTimeLbl">Alert Time</string>
     <string name="addBtn">Add</string>
     <string name="updateBtn">Update</string>
+
     <string name="sunday">Sunday</string>
     <string name="saturday">Saturday</string>
     <string name="monday">Monday</string>
@@ -37,4 +39,13 @@
     <string name="wednesday">Wednesday</string>
     <string name="thursday">Thursday</string>
     <string name="friday">Friday</string>
+
+    <string name="title_activity_add_favorite">Map</string>
+
+    <!--Tap Bar Titles-->
+    <string name="title_activity_tab_bar">Weather</string>
+    <string name="title_home">Home</string>
+    <string name="title_alert">Alert</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_settings">Settings</string>
 </resources>

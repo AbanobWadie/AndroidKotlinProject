@@ -140,22 +140,25 @@ class AddAlertActivity : AppCompatActivity() {
             if (friCheckBox.isChecked) {
                 days.append("FRI,")
             }
-
-            days.deleteCharAt(days.lastIndex)
+            if(satCheckBox.isChecked || sunCheckBox.isChecked || monCheckBox.isChecked ||tueCheckBox.isChecked ||
+                    wedCheckBox.isChecked || thuCheckBox.isChecked || friCheckBox.isChecked) {
+                days.deleteCharAt(days.lastIndex)
+            }else {
+                days.append("No Repeat")
+            }
         }
 
-        val newAlert = Alert(
-            id = 1,
-            alertTime = timeLbl.text.toString(),
-            alertDay = days.toString(),
-            alertEvent = alertEventSpinner.selectedItem.toString(),
-            alertType = alertTypeSpinner.selectedItem.toString(),
-            enabled = true,
-            event = "",
-            start = 0L,
-            end = 0L,
-            description = ""
-        )
+        val newAlert = Alert()
+        newAlert.alertTime = timeLbl.text.toString()
+        newAlert. alertDay = days.toString()
+        newAlert.alertEvent = alertEventSpinner.selectedItem.toString()
+        newAlert. alertType = alertTypeSpinner.selectedItem.toString()
+        newAlert.  enabled = true
+        newAlert. event = ""
+        newAlert.start = 0L
+        newAlert. end = 0L
+        newAlert.description = ""
         //viewModel.insertOrUpdate(newAlert)
+        finish()
     }
 }

@@ -22,7 +22,6 @@ import java.util.*
 
 class AlertActivity : AppCompatActivity() {
     lateinit var alertRecyclerView: RecyclerView
-    lateinit var loading: ProgressBar
 
     private var alertRecyclerViewAdapter = AlertRecyclerViewAdapter(arrayListOf())
     //private lateinit var viewModel: AlertViewModel
@@ -32,7 +31,6 @@ class AlertActivity : AppCompatActivity() {
         setContentView(R.layout.activity_alert)
 
         alertRecyclerView = findViewById(R.id.alertRecyclerView)
-        loading = findViewById(R.id.alerProgressBar)
         val btn: FloatingActionButton = findViewById(R.id.addFloatingButton)
         btn.setOnClickListener {
             val intent = Intent(this, AddAlertActivity::class.java)
@@ -43,11 +41,15 @@ class AlertActivity : AppCompatActivity() {
         //observeViewModel(viewModel)
 
         initRecyclerViewList()
-        //viewModel.getAll()
 
         val calendar = Calendar.getInstance()
         val currentDay = "${calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)}"
         println("++++++++++++++Day+++++++++++ $currentDay")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // viewModel.getAll()
     }
 
     private fun initRecyclerViewList(){
@@ -56,21 +58,20 @@ class AlertActivity : AppCompatActivity() {
             adapter = alertRecyclerViewAdapter
         }
 
-        val data = listOf(
-            Alert(
-                1, "07:00", "WEEKEND", "Temp", "Notification", false,
-                "heat", 52165251, 5165156, "jsadjanfjNJKFLnJKFNJJNRJ\n sjkfbsj"
-            ),
-            Alert(
-                2, "10:00", "MON,WED", "Wind", "Alarm", true,
-                "storm", 8885585, 7855525, "ururururururu\n ,mmifmv"
-            )
-        )
+        val newAlert = Alert()
+        newAlert.alertTime = "07:00"
+        newAlert. alertDay = "WEEKEND"
+        newAlert.alertEvent = "Temp"
+        newAlert. alertType = "Notification"
+        newAlert.  enabled = true
+        newAlert. event = ""
+        newAlert.start = 0L
+        newAlert. end = 0L
+        newAlert.description = ""
+        val data = listOf(newAlert)
         alertRecyclerViewAdapter.updateList(data)
 
-//        val a = Alert(1, "10:00 AM", "MON,WED", "wind", "Alarm", true,
-//                "bb", "storm", 8885585, 7855525, "ururururururu\n ,mmifmv")
-//        viewModel.insertOrUpdate(a)
+        //viewModel.insertOrUpdate(newAlert)
     }
 
     private fun observeViewModel(viewModel: AlertViewModel) {

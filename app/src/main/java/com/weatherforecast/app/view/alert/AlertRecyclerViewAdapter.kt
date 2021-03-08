@@ -10,13 +10,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
-import com.weatherforecast.app.model.Day
 import com.weatherforecast.app.viewmodel.AlertViewModel
-import java.lang.StringBuilder
 
 
 class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Adapter<AlertRecyclerViewAdapter.AlertViewHolder>() {
@@ -77,8 +74,8 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
                 alertDayLbl.text = alert.alertDay
             }
 
-            alertSwitch.setOnDragListener {_, dragEvent ->
-                alert.enabled = dragEvent.result
+            alertSwitch.setOnClickListener() {
+                alert.enabled = alertSwitch.isChecked
                 //viewModel.insertOrUpdate(alert)
                 true
             }

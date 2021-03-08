@@ -30,6 +30,7 @@ import com.weatherforecast.app.model.WeatherInfo
 import com.weatherforecast.app.view.alert.AlertActivity
 import com.weatherforecast.app.view.settings.SettingsActivity
 import com.weatherforecast.app.view.alert.AlertService
+import com.weatherforecast.app.view.favorite.FavoriteActivity
 import com.weatherforecast.app.viewmodel.WeatherViewModel
 
 class MainActivity() : AppCompatActivity() {
@@ -39,6 +40,7 @@ class MainActivity() : AppCompatActivity() {
 
     private var weatherRecyclerViewAdapter = WeatherRecyclerViewAdapter(arrayListOf())
     private var viewModel = WeatherViewModel()
+    private var source = "home"
 
     private var lat = 0.0F
     private var lon = 0.0F
@@ -55,6 +57,11 @@ class MainActivity() : AppCompatActivity() {
         val settingsBtn: Button = findViewById(R.id.settingBtn)
         settingsBtn.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        val favoriteBtn: Button = findViewById(R.id.favoriteBtn)
+        favoriteBtn.setOnClickListener {
+            val intent = Intent(this, FavoriteActivity::class.java)
             startActivity(intent)
         }
         val alertBtn: Button = findViewById(R.id.alertBtn)
@@ -83,16 +90,25 @@ class MainActivity() : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (intent.getStringExtra("source") != null) {
+            source = intent.getStringExtra("source")!!
+        }
+
         val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         lat = pref.getFloat("lat", 0.0F)
         lon = pref.getFloat("lon", 0.0F)
         unit = pref.getString("unit", "metric")!!
         language = pref.getString("language", "en")!!
         val currentLocation = pref.getBoolean("currentLocation", true)
-        if(currentLocation){
-            getLocation()
+
+        if (source == "home") {
+            if (currentLocation) {
+                getLocation()
+            } else {
+                setViewModel(lat.toDouble(), lon.toDouble())
+            }
         }else{
-            setViewModel(lat.toDouble(), lon.toDouble())
+            setViewModel(intent.getDoubleExtra("lat", 0.0), intent.getDoubleExtra("lon", 0.0))
         }
     }
 

@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.weatherforecast.app.model.Alert
+import com.weatherforecast.app.model.Favorite
 
-//@Database(entities = [Alert::class], version = 1)
+//@Database(entities = [Alert::class, Favorite::class], version = 1)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun alertDao(): AlertDao
+    abstract fun favoriteDao(): FavoriteDao
 
     companion object {
         @Volatile
