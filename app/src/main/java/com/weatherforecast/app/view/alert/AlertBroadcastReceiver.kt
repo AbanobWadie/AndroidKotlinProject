@@ -1,5 +1,6 @@
 package com.weatherforecast.app.view.alert
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -8,6 +9,7 @@ import android.content.Context
 import android.content.Context.WINDOW_SERVICE
 import android.content.Intent
 import android.content.Intent.ACTION_TIME_TICK
+import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
@@ -17,11 +19,14 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
+import androidx.preference.PreferenceManager
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
 import com.weatherforecast.app.model.datasource.external.WeatherService
 import com.weatherforecast.app.model.datasource.internal.AlertDao
 import com.weatherforecast.app.model.datasource.internal.AppDatabase
+import com.weatherforecast.app.view.main.MainActivity
 import kotlinx.coroutines.*
 import java.util.*
 
@@ -35,29 +40,36 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
         Log.i("call", "11111111111111111111111111111111111111111111111111")
         when (p1?.action) {
             //ACTION_DATE_CHANGED  -> getAlert()
-            ACTION_TIME_TICK -> getDatabaseAlert(p0!!)
+            //ACTION_TIME_TICK -> getDatabaseAlert(p0!!)
         }
     }
 
     private fun getApiAlert(context: Context, databaseData: List<Alert>) {
-        CoroutineScope(Dispatchers.IO).launch {
-            val response = WeatherService.getWeatherService().getWeatherInfo(
-                33.441792,
-                -94.037689,
-                "metric",
-                "current,minutely,hourly,daily",
-                "en",
-                "67bc71589f11ab9e108b887f0bab9bfc"
-            )
-            withContext(Dispatchers.Main){
-                if(response.isSuccessful){
-                    if(!response.body()!!.alert.isNullOrEmpty()) {
-                        val data = response.body()!!.alert!!
-                        checkAlert(context, databaseData, data)
-                    }
-                }
-            }
-        }
+//        val pref = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+//        val lat = pref.getFloat("lat", 0.0F)
+//        val lon = pref.getFloat("lon", 0.0F)
+//        val unit = pref.getString("unit", "metric")!!
+//        val language = pref.getString("language", "en")!!
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val response = WeatherService.getWeatherService().getWeatherInfo(lat.toDouble(), lon.toDouble(), unit, "current,minutely,hourly,daily", language, "67bc71589f11ab9e108b887f0bab9bfc")
+//            withContext(Dispatchers.Main){
+//                if(response.isSuccessful){
+//                    if(!response.body()!!.alert.isNullOrEmpty()) {
+//                        val data = response.body()!!.alert!!
+//                        checkAlert(context, databaseData, data)
+//                    }
+//                }
+//            }
+//        }
+
+        val newAlert = Alert()
+        newAlert. event = "Temp"
+        newAlert.start = 0L
+        newAlert. end = 0L
+        newAlert.description = "heat heat heat"
+        val data = listOf(newAlert)
+        checkAlert(context, databaseData, data)
     }
 
     private fun getDatabaseAlert(context: Context) {
@@ -66,31 +78,61 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
 //
 //        val calendar = Calendar.getInstance()
 //        val currentTime = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
-//        val data = alertDao.getSome(currentTime, true)
-//
-//        if(!data.isNullOrEmpty()){
-//            getApiAlert(context, data)
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val data = alertDao.getSome(currentTime, true)
+//            withContext(Dispatchers.Main) {
+//                if(!data.isNullOrEmpty()){
+//                    getApiAlert(context, data)
+//                }
+//            }
 //        }
+
+        val newAlert = Alert()
+        newAlert.alertTime = "19:55"
+        newAlert. alertDay = "MON,TUE"
+        newAlert. alertDayAr = "الاثنين,الثلاثاء"
+        newAlert.alertEvent = 0
+        newAlert. alertType = 0
+        newAlert.  enabled = true
+        newAlert. event = ""
+        newAlert.start = 0L
+        newAlert. end = 0L
+        newAlert.description = ""
+
+        val data = listOf(newAlert)
+        getApiAlert(context, data)
     }
 
     private fun checkAlert(context: Context, databaseAlertInfo: List<Alert>, apiAlertInfo: List<Alert>) {
         val calendar = Calendar.getInstance()
-        val currentDay = "${calendar.get(Calendar.DAY_OF_WEEK_IN_MONTH)}"
+        val currentDayNum = calendar.get(Calendar.DAY_OF_WEEK)
+        var currentDay = ""
+
+        when (currentDayNum) {
+            1 -> currentDay = "SUN"
+            2 -> currentDay = "MON"
+            3 -> currentDay = "TUE"
+            4 -> currentDay = "WED"
+            5 -> currentDay = "THU"
+            6 -> currentDay = "FRI"
+            7 -> currentDay = "SAT"
+        }
 
         for (api in apiAlertInfo){
             for (db in databaseAlertInfo){
-                if(api.alertEvent == db.alertEvent) {
+                val alertEventArray: List<String> = context.resources.getStringArray(R.array.alertEvent).toList()
+                if(api.event == alertEventArray[db.alertEvent]) {
                     if (db.alertDay.contains(currentDay) || db.alertDay == "ALL" || (db.alertDay == "WEEKEND" && (currentDay == "FRI" || currentDay == "SAT"))) {
-                        if (db.alertType == "Alarm"){
-                            showAlert(context, api.alertEvent, api.description, "Open", "Stop")
+                        if (db.alertType == 0){
+                            showAlert(context, api.event, api.description, "Open", "Stop")
                         }else{
-                            createNotificationChannel(context)
+                            showForegroundNotification(api.event, api.description, context)
                         }
                     } else if (db.alertDay == "NONE") {
-                        if (db.alertType == "Alarm"){
-                            showAlert(context, api.alertEvent, api.description, "Open", "Stop")
+                        if (db.alertType == 0){
+                            showAlert(context, api.event, api.description, "Open", "Stop")
                         }else{
-                            createNotificationChannel(context)
+                            showForegroundNotification(api.event, api.description, context)
                         }
 
                         db.enabled = false
@@ -152,40 +194,50 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
         manager.addView(view, layoutParams)
     }
 
-    private fun createNotificationChannel(context: Context) {
+    @SuppressLint("ResourceAsColor")
+    private fun showForegroundNotification(notificationTitle: String, notificationBody: String, context: Context) {
+        val intent = Intent(context, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT or Intent.FLAG_ACTIVITY_NEW_TASK
+
+        val lowIntent = PendingIntent.getActivity(context, 100, intent, PendingIntent.FLAG_ONE_SHOT)
+        val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
+        val mNotifyManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name: CharSequence = context.getString(R.string.channel_name)
-            val description = context.getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel =
-                NotificationChannel(CHANNEL_ID, name, importance)
-            channel.description = description
-            val notificationManager = context.getSystemService(
-                NotificationManager::class.java
-            )
-            notificationManager.createNotificationChannel(channel)
-            showNotification(notificationManager, context)
-        }else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val notificationManager = context.getSystemService(
-                NotificationManager::class.java
-            )
-            showNotification(notificationManager, context)
+            val description: String = context.getString(R.string.channel_description) //user visible
+            val importance = NotificationManager.IMPORTANCE_LOW
+            val att = AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build()
+            val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+            mChannel.description = description
+            mChannel.enableLights(false)
+            mChannel.enableVibration(false)
+            mChannel.vibrationPattern = longArrayOf(0L)
+            mChannel.setSound(null, att)
+            mNotifyManager.createNotificationChannel(mChannel)
+            notificationBuilder
+                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setCategory(NotificationCompat.CATEGORY_EVENT)
+                    .setVibrate(longArrayOf(0L))
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setColor(ContextCompat.getColor(context, R.color.teal_700))
+                    .setContentTitle(notificationTitle)
+                    .setAutoCancel(true)
+                    .setContentIntent(lowIntent)
+        } else {
+            notificationBuilder.setContentTitle(notificationTitle)
+                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setCategory(NotificationCompat.CATEGORY_EVENT)
+                    .setVibrate(longArrayOf(0L))
+                    .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                    .setColor(ContextCompat.getColor(context, R.color.teal_700))
+                    .setAutoCancel(true)
+                    .setContentIntent(lowIntent)
         }
-    }
-
-    private fun showNotification(notificationManager: NotificationManager, context: Context?) {
-        val intent = Intent(context, AlertActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-        val builder = NotificationCompat.Builder(
-            context!!
-        )
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle("File Downloaded")
-            .setContentText("Downloaded")
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-        notificationManager.notify(NOTIFICATION_ID, builder.build())
+        notificationBuilder.setStyle(NotificationCompat.BigTextStyle().bigText(notificationBody))
+        notificationBuilder.setContentText(notificationBody)
+        mNotifyManager.notify(NOTIFICATION_ID, notificationBuilder.build())
     }
 }

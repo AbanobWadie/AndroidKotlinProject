@@ -5,7 +5,6 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
 import java.util.*
@@ -68,16 +67,8 @@ class AddAlertActivity : AppCompatActivity() {
     }
 
     private fun setUpdateData() {
-        when (alert.alertEvent) {
-            "Temp" -> alertEventSpinner.setSelection(0, true)
-            "Wind" -> alertEventSpinner.setSelection(1, true)
-        }
-
-        when (alert.alertType) {
-            "Notification" -> alertTypeSpinner.setSelection(0, true)
-            "Alarm" -> alertTypeSpinner.setSelection(1, true)
-        }
-
+        alertEventSpinner.setSelection(alert.alertEvent, true)
+        alertTypeSpinner.setSelection(alert.alertType, true)
         timeLbl.text = alert.alertTime
 
         val days = alert.alertDay.split(",")
@@ -110,55 +101,79 @@ class AddAlertActivity : AppCompatActivity() {
     }
 
     private fun addOrUpdate() {
-        val days = StringBuilder()
+        val daysEn = StringBuilder()
+        val daysAr = StringBuilder()
 
         if (satCheckBox.isChecked && sunCheckBox.isChecked && monCheckBox.isChecked && tueCheckBox.isChecked &&
             wedCheckBox.isChecked && thuCheckBox.isChecked && friCheckBox.isChecked) {
-            days.append("ALL")
+            daysEn.append("ALL")
         }else if (satCheckBox.isChecked && !sunCheckBox.isChecked && !monCheckBox.isChecked && !tueCheckBox.isChecked &&
             !wedCheckBox.isChecked && !thuCheckBox.isChecked && friCheckBox.isChecked) {
-            days.append("WEEKEND")
+            daysEn.append("WEEKEND")
         } else {
             if (satCheckBox.isChecked) {
-                days.append("SAT,")
+                daysEn.append("SAT,")
+                daysAr.append("السبت,")
             }
             if (sunCheckBox.isChecked) {
-                days.append("SUN,")
+                daysEn.append("SUN,")
+                daysAr.append("الاحد,")
             }
             if (monCheckBox.isChecked) {
-                days.append("MON,")
+                daysEn.append("MON,")
+                daysAr.append("الاثنين,")
             }
             if (tueCheckBox.isChecked) {
-                days.append("TUE,")
+                daysEn.append("TUE,")
+                daysAr.append("الثلاثاء,")
             }
             if (wedCheckBox.isChecked) {
-                days.append("WED,")
+                daysEn.append("WED,")
+                daysAr.append("الاربعاء,")
             }
             if (thuCheckBox.isChecked) {
-                days.append("THU,")
+                daysEn.append("THU,")
+                daysAr.append("الخميس,")
             }
             if (friCheckBox.isChecked) {
-                days.append("FRI,")
+                daysEn.append("FRI,")
+                daysAr.append("الجمعة,")
             }
             if(satCheckBox.isChecked || sunCheckBox.isChecked || monCheckBox.isChecked ||tueCheckBox.isChecked ||
                     wedCheckBox.isChecked || thuCheckBox.isChecked || friCheckBox.isChecked) {
-                days.deleteCharAt(days.lastIndex)
+                daysEn.deleteCharAt(daysEn.lastIndex)
+                daysAr.deleteCharAt(daysAr.lastIndex)
             }else {
-                days.append("No Repeat")
+                daysEn.append("NONE")
             }
         }
 
-        val newAlert = Alert()
-        newAlert.alertTime = timeLbl.text.toString()
-        newAlert. alertDay = days.toString()
-        newAlert.alertEvent = alertEventSpinner.selectedItem.toString()
-        newAlert. alertType = alertTypeSpinner.selectedItem.toString()
-        newAlert.  enabled = true
-        newAlert. event = ""
-        newAlert.start = 0L
-        newAlert. end = 0L
-        newAlert.description = ""
-        //viewModel.insertOrUpdate(newAlert)
+        if (intent.getStringExtra("status") == "add"){
+            val newAlert = Alert()
+            newAlert.alertTime = timeLbl.text.toString()
+            newAlert. alertDay = daysEn.toString()
+            newAlert. alertDayAr = daysAr.toString()
+            newAlert.alertEvent = alertEventSpinner.selectedItemPosition
+            newAlert. alertType = alertTypeSpinner.selectedItemPosition
+            newAlert.  enabled = true
+            newAlert. event = ""
+            newAlert.start = 0L
+            newAlert. end = 0L
+            newAlert.description = ""
+            //viewModel.insertOrUpdate(newAlert)
+        }else{
+            alert.alertTime = timeLbl.text.toString()
+            alert. alertDay = daysEn.toString()
+            alert. alertDayAr = daysAr.toString()
+            alert.alertEvent = alertEventSpinner.selectedItemPosition
+            alert. alertType = alertTypeSpinner.selectedItemPosition
+            alert.  enabled = true
+            alert. event = ""
+            alert.start = 0L
+            alert. end = 0L
+            alert.description = ""
+            //viewModel.insertOrUpdate(alert)
+        }
         finish()
     }
 }

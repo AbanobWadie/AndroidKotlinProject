@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -64,15 +65,15 @@ class WeatherRecyclerViewAdapter(var weatherData: ArrayList<Daily>): RecyclerVie
             val pref = PreferenceManager.getDefaultSharedPreferences(context)
             when (pref.getString("unit", "metric")!!) {
                 "imperial" -> {
-                    windLbl.text = daily.wind_speed.toString() + " miles/hour"
+                    windLbl.text = daily.wind_speed.toString() + " ${context.getText(R.string.mileshour)}"
                 }
                 else -> {
-                    windLbl.text = daily.wind_speed.toString() + " meter/sec"
+                    windLbl.text = daily.wind_speed.toString() + " ${context.getText(R.string.metersec)}"
                 }
             }
-            pressureLbl.text = daily.pressure.toString() +" hPa"
+            pressureLbl.text = daily.pressure.toString() + " ${context.getText(R.string.hPa)}"
             if(daily.rain != null){
-                rainLbl.text = daily.rain!!.toString() + " mm"
+                rainLbl.text = daily.rain.toString() + " ${context.getText(R.string.mm)}"
             }else{
                 rainLbl.text = "-"
             }
@@ -85,18 +86,18 @@ class WeatherRecyclerViewAdapter(var weatherData: ArrayList<Daily>): RecyclerVie
 
                 var instant = Instant.ofEpochMilli(daily.sunrise - 3600 * 12000)
                 var date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
-                sunriseLbl.text = formatter.format(date) + " AM"
+                sunriseLbl.text = formatter.format(date) + " ${context.getText(R.string.AM)}"
 
                 instant = Instant.ofEpochMilli(daily.sunset - 3600 * 12000)
                 date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
-                sunsetLbl.text = formatter.format(date) + " PM"
+                sunsetLbl.text = formatter.format(date) + " ${context.getText(R.string.PM)}"
             }else{
                 val sdf = SimpleDateFormat("HH:mm")
                 var date = java.util.Date(daily.sunrise - 3600 * 12000)
-                sunriseLbl.text = sdf.format(date) + " AM"
+                sunriseLbl.text = sdf.format(date) + " ${context.getText(R.string.AM)}"
 
                 date = java.util.Date(daily.sunset - 3600 * 12000)
-                sunsetLbl.text = sdf.format(date) + " PM"
+                sunsetLbl.text = sdf.format(date) + " ${context.getText(R.string.PM)}"
             }
 
             val options = RequestOptions()

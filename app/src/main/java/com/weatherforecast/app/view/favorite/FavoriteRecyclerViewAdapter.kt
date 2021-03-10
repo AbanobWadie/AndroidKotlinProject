@@ -69,6 +69,7 @@ class FavoriteRecyclerViewAdapter(var favoriteData: ArrayList<Favorite>): Recycl
 
             itemView.setOnClickListener {
                 val intent = Intent(adapter.context, MainActivity::class.java)
+                intent.putExtra("openFlag", false)
                 intent.putExtra("source", "favorite")
                 intent.putExtra("lat", favorite.lat)
                 intent.putExtra("lon", favorite.lon)

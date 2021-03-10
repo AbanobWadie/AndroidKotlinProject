@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Weather Forecast</string>
     <string name="humidityLbl">Humidity:</string>
-    <string name="windLbl">Wind:</string>
+    <string name="windLbl">Wind Speed:</string>
     <string name="pressureLbl">Pressure:</string>
     <string name="rainLbl">Rain:</string>
     <string name="cloudsLbl">Clouds:</string>
@@ -23,6 +23,12 @@
 
     <!-- Unit Preferences -->
     <string name="language_title">Default language</string>
+    <string name="metersec">meter/sec</string>
+    <string name="mileshour">miles/hour</string>
+    <string name="hPa">hPa</string>
+    <string name="mm">mm</string>
+    <string name="AM">AM</string>
+    <string name="PM">PM</string>
 
     <string name="noBtn">No</string>
     <string name="yesBtn">Yes</string>
@@ -43,9 +49,13 @@
     <string name="title_activity_add_favorite">Map</string>
 
     <!--Tap Bar Titles-->
-    <string name="title_activity_tab_bar">Weather</string>
     <string name="title_home">Home</string>
     <string name="title_alert">Alert</string>
     <string name="title_favorite">Favorite</string>
     <string name="title_settings">Settings</string>
+
+    <!--alert days-->
+    <string name="EveryDay">Every Day</string>
+    <string name="EveryWeekend">Every Weekend</string>
+    <string name="NoRepeat">"No Repeat"</string>
 </resources>

@@ -14,9 +14,14 @@ import com.weatherforecast.app.model.Favorite
 import com.weatherforecast.app.view.alert.AddAlertActivity
 import com.weatherforecast.app.viewmodel.FavoriteViewModel
 import androidx.lifecycle.Observer
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.weatherforecast.app.view.alert.AlertActivity
+import com.weatherforecast.app.view.main.MainActivity
+import com.weatherforecast.app.view.settings.SettingsActivity
 
 class FavoriteActivity : AppCompatActivity() {
     lateinit var favoriteRecyclerView: RecyclerView
+    lateinit var favoriteNavbar: BottomNavigationView
 
     private var favoriteRecyclerViewAdapter = FavoriteRecyclerViewAdapter(arrayListOf())
     //private lateinit var viewModel: FavoriteViewModel
@@ -26,21 +31,28 @@ class FavoriteActivity : AppCompatActivity() {
         setContentView(R.layout.activity_favorite)
 
         favoriteRecyclerView = findViewById(R.id.FavoriteRecyclerView)
+        favoriteNavbar = findViewById(R.id.favoriteNavBar)
+
         val btn: FloatingActionButton = findViewById(R.id.addFavFloatingButton)
         btn.setOnClickListener {
             val intent = Intent(this, AddFavoriteActivity::class.java)
             startActivity(intent)
         }
 
-        //viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
+        //viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
         //observeViewModel(viewModel)
 
         initRecyclerViewList()
+        navBarMenuAction()
     }
 
     override fun onResume() {
         super.onResume()
         // viewModel.getAll()
+    }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
     }
 
     private fun initRecyclerViewList(){
@@ -97,5 +109,28 @@ class FavoriteActivity : AppCompatActivity() {
 //                    "Maybe", Toast.LENGTH_SHORT).show()
 //        }
         builder.show()
+    }
+
+    private fun navBarMenuAction() {
+        favoriteNavbar.selectedItemId = R.id.navigation_favorite
+        favoriteNavbar.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId){
+                R.id.navigation_home -> {
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.navigation_alert -> {
+                    val intent = Intent(this, AlertActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.navigation_settings -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        }
     }
 }

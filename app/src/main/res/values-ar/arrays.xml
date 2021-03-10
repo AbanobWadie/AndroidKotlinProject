@@ -1,0 +1,48 @@
+<resources>
+    <!-- location Preference -->
+    <string-array name="location_entries">
+        <item>الموقع الحالي</item>
+        <item>موقع اخر</item>
+    </string-array>
+
+    <string-array name="location_values">
+        <item>current</item>
+        <item>other</item>
+    </string-array>
+
+    <!-- unit Preference -->
+    <string-array name="unit_entries">
+        <item>كلفن - متر/ثانية</item>
+        <item>فهرنهايت - ميل/ساعة</item>
+        <item>سليزيوز - متر/ثانية</item>
+    </string-array>
+
+    <string-array name="unit_values">
+        <item>standard</item>
+        <item>imperial</item>
+        <item>metric</item>
+    </string-array>
+
+    <!-- language Preference -->
+    <string-array name="language_entries">
+        <item>الانجليزية</item>
+        <item>العربية</item>
+    </string-array>
+
+    <string-array name="language_values">
+        <item>en</item>
+        <item>ar</item>
+    </string-array>
+
+    <!-- alert event -->
+    <string-array name="alertEvent">
+        <item>درجة الحرارة</item>
+        <item>الرياح</item>
+    </string-array>
+
+    <!-- alert type -->
+    <string-array name="alertType">
+        <item>منبة</item>
+        <item>اشعار</item>
+    </string-array>
+</resources>

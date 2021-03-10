@@ -4,16 +4,21 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
+import androidx.core.content.res.TypedArrayUtils.getText
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.RecyclerView
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
 import com.weatherforecast.app.viewmodel.AlertViewModel
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Adapter<AlertRecyclerViewAdapter.AlertViewHolder>() {
@@ -55,28 +60,41 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
         @SuppressLint("SetTextI18n")
         fun bind(alert: Alert, adapter: AlertRecyclerViewAdapter) {
             alertTimeLbl.text = alert.alertTime
-            alertEventLbl.text = alert.alertEvent
-            alertTypeLbl.text = alert.alertType
+
+            val alertEventArray: List<String> = adapter.context.resources.getStringArray(R.array.alertEvent).toList()
+            alertEventLbl.text = alertEventArray[alert.alertEvent]
+
+            val alertTypeArray: List<String> = adapter.context.resources.getStringArray(R.array.alertType).toList()
+            alertTypeLbl.text = alertTypeArray[alert.alertType]
+
             alertSwitch.isChecked = alert.enabled
 
             //val str = StringBuilder()
             if(alert.alertDay  == "ALL"){
-                alertDayLbl.text = "Every Day"
+                alertDayLbl.text = adapter.context.getText(R.string.EveryDay)
             }else if (alert.alertDay == "WEEKEND"){
-                alertDayLbl.text = "Every Weekend"
+                alertDayLbl.text = adapter.context.getText(R.string.EveryWeekend)
             }else if (alert.alertDay == "NONE"){
-                alertDayLbl.text = "No Repeat"
+                alertDayLbl.text = adapter.context.getText(R.string.NoRepeat)
             }else{
 //                for (day in alert.alertDay){
 //                    str.append("$day,")
 //                }
 //                str.deleteCharAt(str.lastIndex)
-                alertDayLbl.text = alert.alertDay
+
+                val pref = PreferenceManager.getDefaultSharedPreferences(adapter.context.applicationContext)
+                val language = pref.getString("language", "en")!!
+
+                if (language == "en"){
+                    alertDayLbl.text = alert.alertDay
+                }else{
+                    alertDayLbl.text = alert.alertDayAr
+                }
             }
 
             alertSwitch.setOnClickListener() {
                 alert.enabled = alertSwitch.isChecked
-                //viewModel.insertOrUpdate(alert)
+                //adapter.viewModel.insertOrUpdate(alert)
                 true
             }
 

@@ -1,0 +1,61 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">الطقس</string>
+    <string name="humidityLbl">الرطوبة:</string>
+    <string name="windLbl">سرعة الرياح:</string>
+    <string name="pressureLbl">الضغط:</string>
+    <string name="rainLbl">كمية المطر:</string>
+    <string name="cloudsLbl">الغيوم:</string>
+    <string name="title_activity_settings">الاعدادات</string>
+    <string name="title_activity_main">الرئيسية</string>
+    <string name="channel_name">Weather Forecast</string>
+    <string name="channel_description">Home</string>
+
+    <!-- Preference Titles -->
+    <string name="location_header">الموقع</string>
+    <string name="units_header">الوحدة</string>
+    <string name="language_header">اللغة</string>
+
+    <!-- Location Preferences -->
+    <string name="location_title">الموقع الافتراضي</string>
+
+    <!-- Unit Preferences -->
+    <string name="units_title">الوحدة الافتراضية</string>
+    <string name="metersec">متر/ثانية</string>
+    <string name="mileshour">ميل/ساعة</string>
+    <string name="hPa">باسكال</string>
+    <string name="mm">ملليمتر</string>
+    <string name="AM">ص</string>
+    <string name="PM">م</string>
+
+    <!-- Unit Preferences -->
+    <string name="language_title">اللغة الافتراضية</string>
+
+    <string name="noBtn">لا</string>
+    <string name="yesBtn">نعم</string>
+    <string name="alertEventHint">الحدث</string>
+    <string name="alertType">النوع</string>
+    <string name="alertTimeLbl">الوقت</string>
+    <string name="addBtn">اضافة</string>
+    <string name="updateBtn">تعديل</string>
+
+    <string name="sunday">الاحد</string>
+    <string name="saturday">السبت</string>
+    <string name="monday">الاثنين</string>
+    <string name="tuesday">الثلاثاء</string>
+    <string name="wednesday">الاربعاء</string>
+    <string name="thursday">الخميس</string>
+    <string name="friday">الجمعة</string>
+
+    <string name="title_activity_add_favorite">الخريطة</string>
+
+    <!--Tap Bar Titles-->
+    <string name="title_home">الرئيسية</string>
+    <string name="title_alert">النتبيهات</string>
+    <string name="title_favorite">المفضلة</string>
+    <string name="title_settings">الاعدادات</string>
+
+    <!--alert days-->
+    <string name="EveryDay">كل يوم</string>
+    <string name="EveryWeekend">كل نهاية اسبوع</string>
+    <string name="NoRepeat">لا تكرار</string>
+</resources>

@@ -15,7 +15,7 @@
             android:key="location_address"
             android:selectable="false"
             app:isPreferenceVisible="false"
-            app:useSimpleSummaryProvider="true"/>
+            app:useSimpleSummaryProvider="true" />
 
     </PreferenceCategory>
 

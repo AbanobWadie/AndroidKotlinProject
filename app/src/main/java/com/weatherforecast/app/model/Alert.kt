@@ -10,8 +10,9 @@ class Alert(): Serializable {
     var id: Int = 0
     lateinit var alertTime: String
     lateinit var alertDay: String
-    lateinit var alertEvent: String
-    lateinit var alertType: String
+    lateinit var alertDayAr: String
+    var alertEvent: Int = 0
+    var alertType: Int = 0
 
     var enabled: Boolean = false
     lateinit var event: String

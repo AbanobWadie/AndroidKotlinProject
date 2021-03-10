@@ -2,8 +2,11 @@ package com.weatherforecast.app.view.main
 
 import android.Manifest
 import android.app.AlertDialog
+import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
@@ -13,7 +16,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -25,18 +27,23 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.WeatherInfo
 import com.weatherforecast.app.view.alert.AlertActivity
-import com.weatherforecast.app.view.settings.SettingsActivity
 import com.weatherforecast.app.view.alert.AlertService
 import com.weatherforecast.app.view.favorite.FavoriteActivity
+import com.weatherforecast.app.view.settings.SettingsActivity
 import com.weatherforecast.app.viewmodel.WeatherViewModel
+import java.security.Provider
+import java.util.*
+
 
 class MainActivity() : AppCompatActivity() {
 
     lateinit var weatherRecyclerView: RecyclerView
     lateinit var loading: ProgressBar
+    lateinit var homeNavbar: BottomNavigationView
 
     private var weatherRecyclerViewAdapter = WeatherRecyclerViewAdapter(arrayListOf())
     private var viewModel = WeatherViewModel()
@@ -54,38 +61,14 @@ class MainActivity() : AppCompatActivity() {
 
         weatherRecyclerView = findViewById(R.id.recyclerView)
         loading = findViewById(R.id.progressBar)
-        val settingsBtn: Button = findViewById(R.id.settingBtn)
-        settingsBtn.setOnClickListener {
-            val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
-        val favoriteBtn: Button = findViewById(R.id.favoriteBtn)
-        favoriteBtn.setOnClickListener {
-            val intent = Intent(this, FavoriteActivity::class.java)
-            startActivity(intent)
-        }
-        val alertBtn: Button = findViewById(R.id.alertBtn)
-        alertBtn.setOnClickListener {
-            val intent = Intent(this, AlertActivity::class.java)
-            startActivity(intent)
-        }
+        homeNavbar = findViewById(R.id.homeNavbar)
 
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         observeViewModel(viewModel)
 
         initRecyclerViewList()
-
-
-        val intent = Intent(this, AlertService::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
-        }else{
-            startService(intent)
-        }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(this)) {
-            askPermission()
-        }
+        navBarMenuAction()
+        setup()
     }
 
     override fun onResume() {
@@ -108,7 +91,16 @@ class MainActivity() : AppCompatActivity() {
                 setViewModel(lat.toDouble(), lon.toDouble())
             }
         }else{
+            homeNavbar.visibility = View.GONE
             setViewModel(intent.getDoubleExtra("lat", 0.0), intent.getDoubleExtra("lon", 0.0))
+        }
+
+        setLang()
+    }
+
+    override fun onBackPressed() {
+        if (source != "home") {
+            super.onBackPressed()
         }
     }
 
@@ -153,8 +145,8 @@ class MainActivity() : AppCompatActivity() {
 
         builder.setPositiveButton("OK") { _, _ ->
             Toast.makeText(
-                applicationContext,
-                "OK", Toast.LENGTH_SHORT
+                    applicationContext,
+                    "OK", Toast.LENGTH_SHORT
             ).show()
         }
 
@@ -201,27 +193,96 @@ class MainActivity() : AppCompatActivity() {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                    100
+                        this,
+                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        100
                 )
                 return
             }
             locationManager!!.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                0L,
-                0f,
-                locationListener
+                    LocationManager.NETWORK_PROVIDER,
+                    0L,
+                    0f,
+                    locationListener
             )
         } catch (ex: SecurityException) {
             Toast.makeText(applicationContext, ex.localizedMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
+    private fun setup() {
+        val intent = Intent(this, AlertService::class.java)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(intent)
+        }else{
+            startService(intent)
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(this)) {
+            askPermission()
+        }
+    }
+
+    private fun navBarMenuAction() {
+        homeNavbar.selectedItemId = R.id.navigation_home
+        homeNavbar.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId){
+                R.id.navigation_alert -> {
+                    val intent = Intent(this, AlertActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.navigation_favorite -> {
+                    val intent = Intent(this, FavoriteActivity::class.java)
+                    startActivity(intent)
+                }
+
+                R.id.navigation_settings -> {
+                    val intent = Intent(this, SettingsActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            true
+        }
+    }
+
+    private fun setLang() {
+        if (intent.getBooleanExtra("openFlag", true)) {
+            val locale = Locale(language)
+            Locale.setDefault(locale)
+            val resources: Resources = this.resources
+            val config: Configuration = resources.configuration
+            config.setLocale(locale)
+            resources.updateConfiguration(config, resources.displayMetrics)
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("openFlag", false)
+            startActivity(intent)
+        }
+    }
+
+    private fun askPermission() {
+        AlertDialog.Builder(this)
+                .setTitle("Permission")
+                .setMessage("You must let the App to display content overlay the other Apps to can use all its function")
+                .setPositiveButton(
+                        android.R.string.yes
+                ) { dialog, which ->
+                    val intent = Intent(
+                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                            Uri.parse("package:" + this.packageName)
+                    )
+                    startActivityForResult(intent, 0)
+                }
+                .setNegativeButton(android.R.string.no, null)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show()
+    }
+
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 100) {
@@ -232,21 +293,7 @@ class MainActivity() : AppCompatActivity() {
         }
     }
 
-    private fun askPermission() {
-        AlertDialog.Builder(this)
-            .setTitle("Permission")
-            .setMessage("You must let the App to display content overlay the other Apps to can use all its function")
-            .setPositiveButton(
-                android.R.string.yes
-            ) { dialog, which ->
-                val intent = Intent(
-                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + this.packageName)
-                )
-                startActivityForResult(intent, 0)
-            }
-            .setNegativeButton(android.R.string.no, null)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .show()
-    }
+
+
+
 }
