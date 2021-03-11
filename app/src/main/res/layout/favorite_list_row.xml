@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_recycler">
 
     <TextView
         android:id="@+id/favoriteTitleLbl"
@@ -11,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:text="TextView"
+        android:textColor="#FFFFFF"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView"
         app:layout_constraintStart_toEndOf="@+id/imageView"
@@ -36,11 +38,11 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
-        app:tint="@color/teal_700"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:drawable/ic_menu_mylocation"
+        app:tint="@color/white"
         app:tintMode="multiply" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

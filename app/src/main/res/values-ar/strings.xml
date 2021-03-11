@@ -22,6 +22,9 @@
     <string name="units_title">الوحدة الافتراضية</string>
     <string name="metersec">متر/ثانية</string>
     <string name="mileshour">ميل/ساعة</string>
+    <string name="fahrenheit">°F</string>
+    <string name="celsius">°C</string>
+    <string name="kelvin">°K</string>
     <string name="hPa">باسكال</string>
     <string name="mm">ملليمتر</string>
     <string name="AM">ص</string>
@@ -58,4 +61,21 @@
     <string name="EveryDay">كل يوم</string>
     <string name="EveryWeekend">كل نهاية اسبوع</string>
     <string name="NoRepeat">لا تكرار</string>
+
+    <!--dialog-->
+    <string name="Permission">أذن</string>
+    <string name="PermissionMsg">يجب السماح للتطبيق لعرض محتوي فوق التطبيقات الاخري ليعمل بشكل طبيعي</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="rePermissionMsg">لوسمحت اعطي لنا الاذن للوصول لموقعك</string>
+    <string name="Warning">تحذير</string>
+    <string name="WarningMsg">هل انت متاكد من انك تريد مسح هذا ؟</string>
+    <string name="Open">افتح</string>
+    <string name="Stop">اوقف</string>
+    <string name="hourlyLbl">الطقس بالساعات</string>
+    <string name="dailyLbl">الطقس باليوم</string>
+    <string name="dayLbl">صباح</string>
+    <string name="nightLbl">مساء</string>
+    <string name="sunrise">الشروق:</string>
+    <string name="sunset">الغروب:</string>
 </resources>

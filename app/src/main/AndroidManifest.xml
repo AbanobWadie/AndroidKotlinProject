@@ -38,7 +38,9 @@
             android:name=".view.favorite.AddFavoriteActivity"
             android:label="@string/title_activity_add_favorite" />
 
-        <activity android:name=".view.favorite.FavoriteActivity"
+        <activity
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:name=".view.favorite.FavoriteActivity"
             android:label="@string/title_favorite"/>
 
         <activity android:name=".view.alert.AddAlertActivity"
@@ -50,14 +52,18 @@
             android:exported="true"
             android:stopWithTask="false" />
 
-        <activity android:name=".view.alert.AlertActivity"
+        <activity
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:name=".view.alert.AlertActivity"
             android:label="@string/title_alert"/>
 
         <activity
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".view.settings.SettingsActivity"
             android:label="@string/title_settings" />
 
         <activity
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".view.main.MainActivity"
             android:label="@string/title_activity_main">
             <intent-filter>

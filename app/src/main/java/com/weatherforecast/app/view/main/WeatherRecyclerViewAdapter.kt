@@ -14,6 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Daily
+import org.joda.time.DateTime
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.time.LocalDateTime
@@ -22,11 +24,8 @@ import java.time.format.DateTimeFormatter
 
 class WeatherRecyclerViewAdapter(var weatherData: ArrayList<Daily>): RecyclerView.Adapter<WeatherRecyclerViewAdapter.WeatherViewHolder>() {
 
-    var timezone = String()
     lateinit var context: Context
-    fun updateList(newList: List<Daily>, timezone: String) {
-        this.timezone = timezone
-
+    fun updateList(newList: List<Daily>) {
         weatherData.clear()
         weatherData.addAll(newList)
         notifyDataSetChanged()
@@ -38,7 +37,11 @@ class WeatherRecyclerViewAdapter(var weatherData: ArrayList<Daily>): RecyclerVie
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        holder.bind(weatherData[position], timezone, context)
+        if (position == 7){
+            holder.bind(weatherData[position], true, context)
+        }else{
+            holder.bind(weatherData[position], false, context)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -46,66 +49,72 @@ class WeatherRecyclerViewAdapter(var weatherData: ArrayList<Daily>): RecyclerVie
     }
 
     class WeatherViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val tempLbl = view.findViewById<TextView>(R.id.tempLbl)
-        private val humidityLbl = view.findViewById<TextView>(R.id.humidityLbl)
-        private val windLbl = view.findViewById<TextView>(R.id.windLbl)
-        private val pressureLbl = view.findViewById<TextView>(R.id.pressureLbl)
-        private val rainLbl = view.findViewById<TextView>(R.id.rainLbl)
-        private val cloudsLbl = view.findViewById<TextView>(R.id.cloudsLbl)
+        private val dateLbl = view.findViewById<TextView>(R.id.dateLbl)
+        private val dayDescLbl = view.findViewById<TextView>(R.id.dayDescLbl)
         private val sunriseLbl = view.findViewById<TextView>(R.id.sunriseLbl)
+        private val nightDescLbl = view.findViewById<TextView>(R.id.nightDescLbl)
         private val sunsetLbl = view.findViewById<TextView>(R.id.sunsetLbl)
-        private val zoneLbl = view.findViewById<TextView>(R.id.zoneLbl)
-        private val descriptionLbl = view.findViewById<TextView>(R.id.descriptionLbl)
-        private val statusImageView = view.findViewById<ImageView>(R.id.statusImageView)
+        private val dayTempLbl = view.findViewById<TextView>(R.id.dayTempLbl)
+        private val nightTempLbl = view.findViewById<TextView>(R.id.nightTempLbl)
+        private val dayStatusImage = view.findViewById<ImageView>(R.id.dayStatusImage)
+        private val nightStatusImage = view.findViewById<ImageView>(R.id.nightStatusImage)
+        private val line = view.findViewById<View>(R.id.line)
 
         @SuppressLint("SimpleDateFormat", "SetTextI18n")
-        fun bind(daily: Daily, timezone: String, context: Context) {
-            tempLbl.text = daily.temp.day.toString()
-            humidityLbl.text = daily.humidity.toString() + " %"
+        fun bind(daily: Daily, last: Boolean, context: Context) {
+            val date = DateTime(daily.dt * 1000L)
+            val dateFormat = SimpleDateFormat("E dd/MM")
+            dateLbl.text = dateFormat.format(date.toDate())
+
+            dayDescLbl.text = daily.weather[0].description
+            nightDescLbl.text = daily.weather[0].description
+
+            var time = DateTime(daily.sunrise * 1000L)
+            val sdf = SimpleDateFormat("hh:mm a")
+            sunriseLbl.text = context.getText(R.string.sunrise).toString() + " ${sdf.format(time.toDate())}"
+
+            time = DateTime(daily.sunrise * 1000L)
+            sunsetLbl.text = context.getText(R.string.sunset).toString() + " ${sdf.format(time.toDate())}"
+
             val pref = PreferenceManager.getDefaultSharedPreferences(context)
             when (pref.getString("unit", "metric")!!) {
                 "imperial" -> {
-                    windLbl.text = daily.wind_speed.toString() + " ${context.getText(R.string.mileshour)}"
+                    dayTempLbl.text = daily.temp.day.toInt().toString() + " ${context.getText(R.string.fahrenheit)}"
+                    nightTempLbl.text = daily.temp.night.toInt().toString() + " ${context.getText(R.string.fahrenheit)}"
                 }
+
+                "metric" -> {
+                    dayTempLbl.text = daily.temp.day.toInt().toString() + " ${context.getText(R.string.celsius)}"
+                    nightTempLbl.text = daily.temp.night.toInt().toString() + " ${context.getText(R.string.celsius)}"
+                }
+
                 else -> {
-                    windLbl.text = daily.wind_speed.toString() + " ${context.getText(R.string.metersec)}"
+                    dayTempLbl.text = daily.temp.day.toInt().toString() + " ${context.getText(R.string.kelvin)}"
+                    nightTempLbl.text = daily.temp.night.toInt().toString() + " ${context.getText(R.string.kelvin)}"
                 }
-            }
-            pressureLbl.text = daily.pressure.toString() + " ${context.getText(R.string.hPa)}"
-            if(daily.rain != null){
-                rainLbl.text = daily.rain.toString() + " ${context.getText(R.string.mm)}"
-            }else{
-                rainLbl.text = "-"
-            }
-            cloudsLbl.text = daily.clouds.toString() + " %"
-            zoneLbl.text = timezone
-            descriptionLbl.text = daily.weather[0].description
-
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                val formatter = DateTimeFormatter.ofPattern("HH:mm")
-
-                var instant = Instant.ofEpochMilli(daily.sunrise - 3600 * 12000)
-                var date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
-                sunriseLbl.text = formatter.format(date) + " ${context.getText(R.string.AM)}"
-
-                instant = Instant.ofEpochMilli(daily.sunset - 3600 * 12000)
-                date = LocalDateTime.ofInstant(instant, ZoneId.systemDefault())
-                sunsetLbl.text = formatter.format(date) + " ${context.getText(R.string.PM)}"
-            }else{
-                val sdf = SimpleDateFormat("HH:mm")
-                var date = java.util.Date(daily.sunrise - 3600 * 12000)
-                sunriseLbl.text = sdf.format(date) + " ${context.getText(R.string.AM)}"
-
-                date = java.util.Date(daily.sunset - 3600 * 12000)
-                sunsetLbl.text = sdf.format(date) + " ${context.getText(R.string.PM)}"
             }
 
             val options = RequestOptions()
                     .error(R.mipmap.ic_launcher_round)
-            Glide.with(statusImageView.context)
+            Glide.with(dayStatusImage.context)
                     .setDefaultRequestOptions(options)
                     .load("http://openweathermap.org/img/wn/" + daily.weather[0].icon + "@2x.png")
-                    .into(statusImageView)
+                    .into(dayStatusImage)
+
+            val icon = StringBuilder()
+            icon.append(daily.weather[0].icon)
+            icon.deleteCharAt(icon.lastIndex)
+            icon.append("n")
+            Glide.with(nightStatusImage.context)
+                .setDefaultRequestOptions(options)
+                .load("http://openweathermap.org/img/wn/" + icon.toString() + "@2x.png")
+                .into(nightStatusImage)
+
+            if (last){
+                line.visibility = View.GONE
+            }else{
+                line.visibility = View.VISIBLE
+            }
         }
     }
 }

@@ -20,6 +20,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.preference.PreferenceManager
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
@@ -124,13 +125,13 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
                 if(api.event == alertEventArray[db.alertEvent]) {
                     if (db.alertDay.contains(currentDay) || db.alertDay == "ALL" || (db.alertDay == "WEEKEND" && (currentDay == "FRI" || currentDay == "SAT"))) {
                         if (db.alertType == 0){
-                            showAlert(context, api.event, api.description, "Open", "Stop")
+                            showAlert(context, api.event, api.description, context.getText(R.string.Open).toString(), context.getText(R.string.Stop).toString())
                         }else{
                             showForegroundNotification(api.event, api.description, context)
                         }
                     } else if (db.alertDay == "NONE") {
                         if (db.alertType == 0){
-                            showAlert(context, api.event, api.description, "Open", "Stop")
+                            showAlert(context, api.event, api.description, context.getText(R.string.Open).toString(), context.getText(R.string.Stop).toString())
                         }else{
                             showForegroundNotification(api.event, api.description, context)
                         }

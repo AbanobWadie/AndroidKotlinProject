@@ -1,9 +1,11 @@
 package com.weatherforecast.app.view.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Service
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -16,7 +18,9 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -27,41 +31,65 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.WeatherInfo
 import com.weatherforecast.app.view.alert.AlertActivity
+import com.weatherforecast.app.view.alert.AlertBroadcastReceiver
 import com.weatherforecast.app.view.alert.AlertService
 import com.weatherforecast.app.view.favorite.FavoriteActivity
 import com.weatherforecast.app.view.settings.SettingsActivity
 import com.weatherforecast.app.viewmodel.WeatherViewModel
+import org.joda.time.DateTime
 import java.security.Provider
+import java.text.SimpleDateFormat
 import java.util.*
 
 
 class MainActivity() : AppCompatActivity() {
 
-    lateinit var weatherRecyclerView: RecyclerView
-    lateinit var loading: ProgressBar
-    lateinit var homeNavbar: BottomNavigationView
+    private lateinit var timeZoneLbl: TextView
+    private lateinit var currentTimeLbl: TextView
+    private lateinit var currentDescLbl: TextView
+    private lateinit var currentTempLbl: TextView
+    private lateinit var currentStatusImage: ImageView
+    private lateinit var hourlyTitle: TextView
+    private lateinit var hourlyRecyclerView: RecyclerView
+    private lateinit var dailyTitle: TextView
+    private lateinit var dailyRecyclerView: RecyclerView
+    private lateinit var loading: ProgressBar
+    private lateinit var homeNavBar: BottomNavigationView
 
     private var weatherRecyclerViewAdapter = WeatherRecyclerViewAdapter(arrayListOf())
+    private var hourlyRecyclerViewAdapter = HourlyRecyclerViewAdapter(arrayListOf())
     private var viewModel = WeatherViewModel()
     private var source = "home"
+    private var locationFlag = true
 
     private var lat = 0.0F
     private var lon = 0.0F
     private var unit = String()
     private var language = String()
+    private val myReceiver = AlertBroadcastReceiver()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        weatherRecyclerView = findViewById(R.id.recyclerView)
-        loading = findViewById(R.id.progressBar)
-        homeNavbar = findViewById(R.id.homeNavbar)
+        timeZoneLbl = findViewById(R.id.timeZoneLbl)
+        currentTimeLbl = findViewById(R.id.currentTimeLbl)
+        currentDescLbl = findViewById(R.id.currentDescLbl)
+        currentTempLbl = findViewById(R.id.currentTempLbl)
+        currentStatusImage = findViewById(R.id.currentStatusImage)
+        hourlyTitle = findViewById(R.id.hourlyTitle)
+        hourlyRecyclerView = findViewById(R.id.hourlyRecyclerView)
+        dailyTitle = findViewById(R.id.dailyTitle)
+        dailyRecyclerView = findViewById(R.id.dailyRecyclerView)
+        loading = findViewById(R.id.homeProgressBar)
+        homeNavBar = findViewById(R.id.homeNavBar)
 
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
         observeViewModel(viewModel)
@@ -86,12 +114,13 @@ class MainActivity() : AppCompatActivity() {
 
         if (source == "home") {
             if (currentLocation) {
+                locationFlag = true
                 getLocation()
             } else {
                 setViewModel(lat.toDouble(), lon.toDouble())
             }
         }else{
-            homeNavbar.visibility = View.GONE
+            homeNavBar.visibility = View.GONE
             setViewModel(intent.getDoubleExtra("lat", 0.0), intent.getDoubleExtra("lon", 0.0))
         }
 
@@ -106,12 +135,17 @@ class MainActivity() : AppCompatActivity() {
 
     private fun setViewModel(lat: Double, lon: Double){
         //viewModel.getData(33.441792, -94.037689, "metric", "current,minutely,hourly,alerts", "67bc71589f11ab9e108b887f0bab9bfc")
-        viewModel.getData(lat, lon, unit, "current,minutely,hourly,alerts", language, "67bc71589f11ab9e108b887f0bab9bfc")
+        viewModel.getData(lat, lon, unit, "minutely,alerts", language, "67bc71589f11ab9e108b887f0bab9bfc")
     }
 
     private fun initRecyclerViewList(){
-        weatherRecyclerView.apply {
-            layoutManager = LinearLayoutManager(applicationContext)
+        hourlyRecyclerView.apply {
+            layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
+            adapter = hourlyRecyclerViewAdapter
+        }
+
+        dailyRecyclerView.apply {
+            layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
             adapter = weatherRecyclerViewAdapter
         }
     }
@@ -122,10 +156,35 @@ class MainActivity() : AppCompatActivity() {
         viewModel.getError().observe(this, Observer { showError(it) })
     }
 
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun setData(data: WeatherInfo) {
-        weatherRecyclerViewAdapter.updateList(data.daily!!, data.timezone)
         Log.i("call", data.timezone)
         println(data)
+
+        hourlyTitle.visibility = View.VISIBLE
+        dailyTitle.visibility = View.VISIBLE
+
+        hourlyRecyclerViewAdapter.updateList(data.hourly!!)
+        weatherRecyclerViewAdapter.updateList(data.daily!!)
+
+        timeZoneLbl.text = (data.timezone.split("/"))[1]
+        val time = DateTime(data.current!!.dt * 1000L)
+        val sdf = SimpleDateFormat("E hh:mm a")
+        currentTimeLbl.text = sdf.format(time.toDate())
+        currentDescLbl.text = data.current.weather[0].description
+        when (unit) {
+            "imperial" -> currentTempLbl.text = data.current.temp.toInt().toString() + " ${getText(R.string.fahrenheit)}"
+            "metric" -> currentTempLbl.text = data.current.temp.toInt().toString() + " ${getText(R.string.celsius)}"
+            else -> currentTempLbl.text = data.current.temp.toInt().toString() + " ${getText(R.string.kelvin)}"
+        }
+
+        val options = RequestOptions()
+                .error(R.mipmap.ic_launcher_round)
+        Glide.with(currentStatusImage.context)
+                .setDefaultRequestOptions(options)
+                .load("http://openweathermap.org/img/wn/" + data.current.weather[0].icon + "@2x.png")
+                .into(currentStatusImage)
+
     }
 
     private fun showLoading(flag: Boolean) {
@@ -149,43 +208,22 @@ class MainActivity() : AppCompatActivity() {
                     "OK", Toast.LENGTH_SHORT
             ).show()
         }
-
-//        builder.setNegativeButton("No") { dialog, which ->
-//            Toast.makeText(applicationContext,
-//                    "No", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        builder.setNeutralButton("Maybe") { dialog, which ->
-//            Toast.makeText(applicationContext,
-//                    "Maybe", Toast.LENGTH_SHORT).show()
-//        }
         builder.show()
     }
 
     private fun getLocation() {
 
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
+        val locationListener = LocationListener { location ->
+            val latitude = location.latitude
+            val longitude = location.longitude
 
-        val locationListener = object : LocationListener {
-            override fun onLocationChanged(p0: Location) {
-                val latitude = p0.latitude
-                val longitude = p0.longitude
-
-                Log.i("call", "Latitude: $latitude ; longitude: $longitude")
-                val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-                val currentLocation = pref.getBoolean("currentLocation", true)
-                if(currentLocation){
-                    setViewModel(latitude, longitude)
-                }
-            }
-
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-            }
-
-            override fun onProviderEnabled(provider: String) {
-            }
-
-            override fun onProviderDisabled(provider: String) {
+            Log.i("call", "Latitude: $latitude ; longitude: $longitude")
+            val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+            val currentLocation = pref.getBoolean("currentLocation", true)
+            if(currentLocation && locationFlag){
+                locationFlag = false
+                setViewModel(latitude, longitude)
             }
         }
 
@@ -213,19 +251,28 @@ class MainActivity() : AppCompatActivity() {
     private fun setup() {
         val intent = Intent(this, AlertService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForegroundService(intent)
+            //startForegroundService(intent)
+            val intentFilter = IntentFilter(Intent.ACTION_TIME_TICK)
+            registerReceiver(myReceiver, intentFilter)
         }else{
             startService(intent)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !Settings.canDrawOverlays(this)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             askPermission()
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            unregisterReceiver(myReceiver)
+        }
+    }
+
     private fun navBarMenuAction() {
-        homeNavbar.selectedItemId = R.id.navigation_home
-        homeNavbar.setOnNavigationItemSelectedListener { item ->
+        homeNavBar.selectedItemId = R.id.navigation_home
+        homeNavBar.setOnNavigationItemSelectedListener { item ->
             when (item.itemId){
                 R.id.navigation_alert -> {
                     val intent = Intent(this, AlertActivity::class.java)
@@ -263,18 +310,16 @@ class MainActivity() : AppCompatActivity() {
 
     private fun askPermission() {
         AlertDialog.Builder(this)
-                .setTitle("Permission")
-                .setMessage("You must let the App to display content overlay the other Apps to can use all its function")
-                .setPositiveButton(
-                        android.R.string.yes
-                ) { dialog, which ->
+                .setTitle(getText(R.string.Permission))
+                .setMessage(getText(R.string.PermissionMsg))
+                .setPositiveButton(getText(R.string.yes)) { _, _ ->
                     val intent = Intent(
                             Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                             Uri.parse("package:" + this.packageName)
                     )
                     startActivityForResult(intent, 0)
                 }
-                .setNegativeButton(android.R.string.no, null)
+                .setNegativeButton(getText(R.string.no), null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show()
     }
@@ -288,7 +333,7 @@ class MainActivity() : AppCompatActivity() {
         if (requestCode == 100) {
             when (grantResults[0]) {
                 PackageManager.PERMISSION_GRANTED -> getLocation()
-                PackageManager.PERMISSION_DENIED -> showError("Please, give us permission to access your Location")
+                PackageManager.PERMISSION_DENIED -> showError(getText(R.string.rePermissionMsg).toString())
             }
         }
     }

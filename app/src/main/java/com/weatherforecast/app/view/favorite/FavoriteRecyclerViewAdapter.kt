@@ -54,16 +54,16 @@ class FavoriteRecyclerViewAdapter(var favoriteData: ArrayList<Favorite>): Recycl
 
             deleteButton.setOnClickListener {
                 val builder = AlertDialog.Builder(adapter.context)
-                builder.setTitle("Warning")
-                builder.setMessage("Are you sure you want delete this?")
+                builder.setTitle(adapter.context.getText(R.string.Warning))
+                builder.setMessage(adapter.context.getText(R.string.WarningMsg))
 
-                builder.setPositiveButton("Yes") { _, _ ->
+                builder.setPositiveButton(adapter.context.getText(R.string.yes)) { _, _ ->
                     //adapter.viewModel.delete(favorite)
                     adapter.favoriteData.remove(favorite)
                     adapter.notifyDataSetChanged()
                 }
 
-                builder.setNegativeButton("No", null)
+                builder.setNegativeButton(adapter.context.getText(R.string.no), null)
                 builder.show()
             }
 

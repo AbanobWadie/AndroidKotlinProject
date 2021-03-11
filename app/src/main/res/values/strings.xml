@@ -25,6 +25,9 @@
     <string name="language_title">Default language</string>
     <string name="metersec">meter/sec</string>
     <string name="mileshour">miles/hour</string>
+    <string name="fahrenheit">°F</string>
+    <string name="celsius">°C</string>
+    <string name="kelvin">°K</string>
     <string name="hPa">hPa</string>
     <string name="mm">mm</string>
     <string name="AM">AM</string>
@@ -58,4 +61,22 @@
     <string name="EveryDay">Every Day</string>
     <string name="EveryWeekend">Every Weekend</string>
     <string name="NoRepeat">"No Repeat"</string>
+
+    <!--dialog-->
+    <string name="Permission">Permission</string>
+    <string name="PermissionMsg">You must let the App to display content overlay the other Apps to can use all its function</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="rePermissionMsg">Please, give us permission to access your Location</string>
+    <string name="Warning">Warning</string>
+    <string name="WarningMsg">Are you sure you want delete this?</string>
+    <string name="Open">Open</string>
+    <string name="Stop">Stop</string>
+
+    <string name="hourlyLbl">Hourly Forecast</string>
+    <string name="dailyLbl">Daily Forecast</string>
+    <string name="dayLbl">Day</string>
+    <string name="nightLbl">Night</string>
+    <string name="sunrise">Sunrise:</string>
+    <string name="sunset">Sunset:</string>
 </resources>

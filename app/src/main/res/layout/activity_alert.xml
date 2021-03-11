@@ -7,11 +7,22 @@
     android:background="#FFFFFF"
     tools:context=".view.alert.AlertActivity">
 
+    <ImageView
+        android:id="@+id/backgroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="1"
+        android:foreground="#7A183C45"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/background" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/alertRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="#FFFFFF"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
         app:layout_constraintBottom_toTopOf="@+id/alertNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -25,6 +36,7 @@
         android:layout_marginBottom="20dp"
         android:clickable="true"
         android:src="@drawable/ic_baseline_add_24"
+        app:backgroundTint="#EE3B5961"
         app:layout_constraintBottom_toTopOf="@+id/alertNavBar"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -32,6 +44,7 @@
         android:id="@+id/alertNavBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#EE3B5961"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
