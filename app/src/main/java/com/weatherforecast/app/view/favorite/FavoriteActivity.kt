@@ -14,6 +14,7 @@ import com.weatherforecast.app.model.Favorite
 import com.weatherforecast.app.view.alert.AddAlertActivity
 import com.weatherforecast.app.viewmodel.FavoriteViewModel
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.weatherforecast.app.view.alert.AlertActivity
 import com.weatherforecast.app.view.main.MainActivity
@@ -24,7 +25,7 @@ class FavoriteActivity : AppCompatActivity() {
     lateinit var favoriteNavbar: BottomNavigationView
 
     private var favoriteRecyclerViewAdapter = FavoriteRecyclerViewAdapter(arrayListOf())
-    //private lateinit var viewModel: FavoriteViewModel
+    private lateinit var viewModel: FavoriteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +40,8 @@ class FavoriteActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        //viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
-        //observeViewModel(viewModel)
+        viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
+        observeViewModel(viewModel)
 
         initRecyclerViewList()
         navBarMenuAction()
@@ -48,7 +49,7 @@ class FavoriteActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // viewModel.getAll()
+         viewModel.getAll()
     }
 
     override fun onBackPressed() {
@@ -61,19 +62,19 @@ class FavoriteActivity : AppCompatActivity() {
             adapter = favoriteRecyclerViewAdapter
         }
 
-        val newFavorite = Favorite()
-        newFavorite.title = "chicago"
-        newFavorite.lat = 33.441792
-        newFavorite.lon = -94.037689
-
-        val newFavorite2 = Favorite()
-        newFavorite2.title = "istanbul"
-        newFavorite2.lat = 41.0082
-        newFavorite2.lon = 0.0
-        val data = listOf(newFavorite, newFavorite2)
-        favoriteRecyclerViewAdapter.updateList(data)
-
-        //viewModel.insertOrUpdate(newAlert)
+//        val newFavorite = Favorite()
+//        newFavorite.title = "chicago"
+//        newFavorite.lat = 33.441792
+//        newFavorite.lon = -94.037689
+//
+//        val newFavorite2 = Favorite()
+//        newFavorite2.title = "istanbul"
+//        newFavorite2.lat = 41.0082
+//        newFavorite2.lon = 0.0
+//        val data = listOf(newFavorite, newFavorite2)
+//        favoriteRecyclerViewAdapter.updateList(data)
+//
+//        //viewModel.insertOrUpdate(newAlert)
     }
 
     private fun observeViewModel(viewModel: FavoriteViewModel) {
@@ -82,7 +83,7 @@ class FavoriteActivity : AppCompatActivity() {
     }
 
     private fun updateUI(data: List<Favorite>) {
-        favoriteRecyclerViewAdapter.updateList(data)
+        favoriteRecyclerViewAdapter.updateList(data, viewModel)
         println(data)
     }
 

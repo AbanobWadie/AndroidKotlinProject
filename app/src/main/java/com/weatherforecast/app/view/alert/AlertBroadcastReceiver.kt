@@ -46,62 +46,62 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
     }
 
     private fun getApiAlert(context: Context, databaseData: List<Alert>) {
-//        val pref = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
-//        val lat = pref.getFloat("lat", 0.0F)
-//        val lon = pref.getFloat("lon", 0.0F)
-//        val unit = pref.getString("unit", "metric")!!
-//        val language = pref.getString("language", "en")!!
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val response = WeatherService.getWeatherService().getWeatherInfo(lat.toDouble(), lon.toDouble(), unit, "current,minutely,hourly,daily", language, "67bc71589f11ab9e108b887f0bab9bfc")
-//            withContext(Dispatchers.Main){
-//                if(response.isSuccessful){
-//                    if(!response.body()!!.alert.isNullOrEmpty()) {
-//                        val data = response.body()!!.alert!!
-//                        checkAlert(context, databaseData, data)
-//                    }
-//                }
-//            }
-//        }
+        val pref = PreferenceManager.getDefaultSharedPreferences(context.applicationContext)
+        val lat = pref.getFloat("lat", 0.0F)
+        val lon = pref.getFloat("lon", 0.0F)
+        val unit = pref.getString("unit", "metric")!!
+        val language = pref.getString("language", "en")!!
 
-        val newAlert = Alert()
-        newAlert. event = "Temp"
-        newAlert.start = 0L
-        newAlert. end = 0L
-        newAlert.description = "heat heat heat"
-        val data = listOf(newAlert)
-        checkAlert(context, databaseData, data)
+        CoroutineScope(Dispatchers.IO).launch {
+            val response = WeatherService.getWeatherService().getWeatherInfo(lat.toDouble(), lon.toDouble(), unit, "current,minutely,hourly,daily", language, "67bc71589f11ab9e108b887f0bab9bfc")
+            withContext(Dispatchers.Main){
+                if(response.isSuccessful){
+                    if(!response.body()!!.alert.isNullOrEmpty()) {
+                        val data = response.body()!!.alert!!
+                        checkAlert(context, databaseData, data)
+                    }
+                }
+            }
+        }
+
+//        val newAlert = Alert()
+//        newAlert. event = "Temp"
+//        newAlert.start = 0L
+//        newAlert. end = 0L
+//        newAlert.description = "heat heat heat"
+//        val data = listOf(newAlert)
+//        checkAlert(context, databaseData, data)
     }
 
     private fun getDatabaseAlert(context: Context) {
-//        val db: AppDatabase = AppDatabase.getDatabase(context.applicationContext)!!
-//        val alertDao: AlertDao = db.alertDao()
+        val db: AppDatabase = AppDatabase.getDatabase(context.applicationContext)!!
+        val alertDao: AlertDao = db.alertDao()
+
+        val calendar = Calendar.getInstance()
+        val currentTime = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
+        CoroutineScope(Dispatchers.IO).launch {
+            val data = alertDao.getSome(currentTime, true)
+            withContext(Dispatchers.Main) {
+                if(!data.isNullOrEmpty()){
+                    getApiAlert(context, data)
+                }
+            }
+        }
+
+//        val newAlert = Alert()
+//        newAlert.alertTime = "19:55"
+//        newAlert. alertDay = "MON,TUE"
+//        newAlert. alertDayAr = "الاثنين,الثلاثاء"
+//        newAlert.alertEvent = 0
+//        newAlert. alertType = 0
+//        newAlert.  enabled = true
+//        newAlert. event = ""
+//        newAlert.start = 0L
+//        newAlert. end = 0L
+//        newAlert.description = ""
 //
-//        val calendar = Calendar.getInstance()
-//        val currentTime = "${calendar.get(Calendar.HOUR_OF_DAY)}:${calendar.get(Calendar.MINUTE)}"
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val data = alertDao.getSome(currentTime, true)
-//            withContext(Dispatchers.Main) {
-//                if(!data.isNullOrEmpty()){
-//                    getApiAlert(context, data)
-//                }
-//            }
-//        }
-
-        val newAlert = Alert()
-        newAlert.alertTime = "19:55"
-        newAlert. alertDay = "MON,TUE"
-        newAlert. alertDayAr = "الاثنين,الثلاثاء"
-        newAlert.alertEvent = 0
-        newAlert. alertType = 0
-        newAlert.  enabled = true
-        newAlert. event = ""
-        newAlert.start = 0L
-        newAlert. end = 0L
-        newAlert.description = ""
-
-        val data = listOf(newAlert)
-        getApiAlert(context, data)
+//        val data = listOf(newAlert)
+//        getApiAlert(context, data)
     }
 
     private fun checkAlert(context: Context, databaseAlertInfo: List<Alert>, apiAlertInfo: List<Alert>) {
@@ -219,7 +219,7 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
             mChannel.setSound(null, att)
             mNotifyManager.createNotificationChannel(mChannel)
             notificationBuilder
-                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setSmallIcon(R.drawable.ic_forecast)
                     .setCategory(NotificationCompat.CATEGORY_EVENT)
                     .setVibrate(longArrayOf(0L))
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
@@ -229,7 +229,7 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
                     .setContentIntent(lowIntent)
         } else {
             notificationBuilder.setContentTitle(notificationTitle)
-                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setSmallIcon(R.drawable.ic_forecast)
                     .setCategory(NotificationCompat.CATEGORY_EVENT)
                     .setVibrate(longArrayOf(0L))
                     .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))

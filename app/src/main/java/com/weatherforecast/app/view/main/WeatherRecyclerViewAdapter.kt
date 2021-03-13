@@ -2,6 +2,7 @@ package com.weatherforecast.app.view.main
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -114,6 +115,13 @@ class WeatherRecyclerViewAdapter(var weatherData: ArrayList<Daily>): RecyclerVie
                 line.visibility = View.GONE
             }else{
                 line.visibility = View.VISIBLE
+            }
+
+            itemView.setOnClickListener {
+                val intent = Intent(context, MainDetailsActivity::class.java)
+                intent.putExtra("title", "daily")
+                intent.putExtra("daily", daily)
+                context.startActivity(intent)
             }
         }
     }

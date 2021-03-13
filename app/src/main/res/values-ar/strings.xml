@@ -1,10 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">الطقس</string>
-    <string name="humidityLbl">الرطوبة:</string>
-    <string name="windLbl">سرعة الرياح:</string>
-    <string name="pressureLbl">الضغط:</string>
-    <string name="rainLbl">كمية المطر:</string>
-    <string name="cloudsLbl">الغيوم:</string>
     <string name="title_activity_settings">الاعدادات</string>
     <string name="title_activity_main">الرئيسية</string>
     <string name="channel_name">Weather Forecast</string>
@@ -78,4 +73,15 @@
     <string name="nightLbl">مساء</string>
     <string name="sunrise">الشروق:</string>
     <string name="sunset">الغروب:</string>
+
+    <!--details view-->
+    <string name="feels_like">الفعلي</string>
+    <string name="wind_speed">سرعة الرياح</string>
+    <string name="pressure">الضغط</string>
+    <string name="humidity">الرطوبة</string>
+    <string name="dew_point">الندي</string>
+    <string name="clouds">الغيوم</string>
+    <string name="uvi">فوق البنفسجية</string>
+    <string name="rain">المطر</string>
+    <string name="snow">الثلج</string>
 </resources>

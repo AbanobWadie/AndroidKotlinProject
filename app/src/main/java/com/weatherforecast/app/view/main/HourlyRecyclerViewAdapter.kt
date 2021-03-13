@@ -2,6 +2,7 @@ package com.weatherforecast.app.view.main
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,6 +77,13 @@ class HourlyRecyclerViewAdapter(var weatherData: ArrayList<Hourly>): RecyclerVie
                     .setDefaultRequestOptions(options)
                     .load("http://openweathermap.org/img/wn/" + hourly.weather[0].icon + "@2x.png")
                     .into(hourlyStatusImage)
+
+            itemView.setOnClickListener {
+                val intent = Intent(context, MainDetailsActivity::class.java)
+                intent.putExtra("title", "hourly")
+                intent.putExtra("hourly", hourly)
+                context.startActivity(intent)
+            }
         }
     }
 }

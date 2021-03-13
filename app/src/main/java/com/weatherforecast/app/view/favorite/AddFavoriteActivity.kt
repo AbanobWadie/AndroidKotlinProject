@@ -30,15 +30,16 @@ class AddFavoriteActivity : AppCompatActivity(), OnMapReadyCallback {
     var currentMarker : Marker? = null
     var fusedLocationProviderClient : FusedLocationProviderClient?= null
     var currentLocation: Location? = null
-    var  latitude: Double? = null
-    var  longtitue: Double? = null
-    //private lateinit var viewModel: FavoriteViewModel
+    var latitude: Double? = null
+    var longtitue: Double? = null
+    var title: String? = null
+    private lateinit var viewModel: FavoriteViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_favorite)
 
-        //viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(FavoriteViewModel::class.java)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         fetchLocation()
@@ -104,8 +105,8 @@ class AddFavoriteActivity : AppCompatActivity(), OnMapReadyCallback {
                 val newFavorite = Favorite()
                 newFavorite.lat = latitude!!
                 newFavorite.lon = longtitue!!
-                newFavorite.title = " Alex "
-                //viewModel.insertOrUpdate(newFavorite)
+                newFavorite.title = title!!
+                viewModel.insertOrUpdate(newFavorite)
                 finish()
             }
 
@@ -128,6 +129,9 @@ class AddFavoriteActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun getAddress(lat: Double, long: Double) :String? {
         val geCoder= Geocoder(this, Locale.getDefault())
         val address = geCoder.getFromLocation(lat,long,1)
+        if (address!= null) {
+            title = (address[0].locality)
+        }
         return  address[0].getAddressLine(0).toString()
     }
 

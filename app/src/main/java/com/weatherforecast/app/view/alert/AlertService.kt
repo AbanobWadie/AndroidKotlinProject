@@ -81,7 +81,7 @@ class AlertService : Service() {
             mChannel.setSound(null, att)
             mNotifyManager.createNotificationChannel(mChannel)
             notificationBuilder
-                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setSmallIcon(R.drawable.ic_forecast)
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setVibrate(longArrayOf(0L))
                     .setSound(null)
@@ -91,7 +91,7 @@ class AlertService : Service() {
                     .setContentIntent(lowIntent)
         } else {
             notificationBuilder
-                    .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+                    .setSmallIcon(R.drawable.ic_forecast)
                     .setCategory(NotificationCompat.CATEGORY_SERVICE)
                     .setVibrate(longArrayOf(0L))
                     .setSound(null)

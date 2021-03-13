@@ -214,16 +214,27 @@ class MainActivity() : AppCompatActivity() {
     private fun getLocation() {
 
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
-        val locationListener = LocationListener { location ->
-            val latitude = location.latitude
-            val longitude = location.longitude
+        val locationListener = object : LocationListener{
+            override fun onLocationChanged(location: Location) {
+                val latitude = location.latitude
+                val longitude = location.longitude
 
-            Log.i("call", "Latitude: $latitude ; longitude: $longitude")
-            val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-            val currentLocation = pref.getBoolean("currentLocation", true)
-            if(currentLocation && locationFlag){
-                locationFlag = false
-                setViewModel(latitude, longitude)
+                Log.i("call", "Latitude: $latitude ; longitude: $longitude")
+                val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+                val currentLocation = pref.getBoolean("currentLocation", true)
+                if(currentLocation && locationFlag){
+                    locationFlag = false
+                    setViewModel(latitude, longitude)
+                }
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+            }
+
+            override fun onProviderEnabled(provider: String) {
+            }
+
+            override fun onProviderDisabled(provider: String) {
             }
         }
 

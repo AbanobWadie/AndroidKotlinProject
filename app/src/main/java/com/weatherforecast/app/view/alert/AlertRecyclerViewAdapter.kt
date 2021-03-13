@@ -25,8 +25,8 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
     lateinit var context: Context
     lateinit var viewModel: AlertViewModel
 
-    fun updateList(newList: List<Alert>/*, viewModel: AlertViewModel*/) {
-        //this.viewModel = viewModel
+    fun updateList(newList: List<Alert>, viewModel: AlertViewModel) {
+        this.viewModel = viewModel
 
         alertData.clear()
         alertData.addAll(newList)
@@ -94,7 +94,7 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
 
             alertSwitch.setOnClickListener() {
                 alert.enabled = alertSwitch.isChecked
-                //adapter.viewModel.insertOrUpdate(alert)
+                adapter.viewModel.insertOrUpdate(alert)
                 true
             }
 
@@ -111,7 +111,7 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
                 builder.setMessage(adapter.context.getText(R.string.WarningMsg))
 
                 builder.setPositiveButton(adapter.context.getText(R.string.yes)) { _, _ ->
-                    //adapter.viewModel.delete(alert)
+                    adapter.viewModel.delete(alert)
                     adapter.alertData.remove(alert)
                     adapter.notifyDataSetChanged()
                 }

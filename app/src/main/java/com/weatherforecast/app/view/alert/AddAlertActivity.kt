@@ -5,8 +5,10 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
+import com.weatherforecast.app.viewmodel.AlertViewModel
 import java.util.*
 
 
@@ -24,7 +26,7 @@ class AddAlertActivity : AppCompatActivity() {
     private lateinit var friCheckBox: CheckBox
     private lateinit var addbtn: Button
 
-    //private lateinit var viewModel: AlertViewModel
+    private lateinit var viewModel: AlertViewModel
     private lateinit var alert: Alert
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +65,7 @@ class AddAlertActivity : AppCompatActivity() {
             setUpdateData()
         }
 
-        //viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
     }
 
     private fun setUpdateData() {
@@ -160,7 +162,7 @@ class AddAlertActivity : AppCompatActivity() {
             newAlert.start = 0L
             newAlert. end = 0L
             newAlert.description = ""
-            //viewModel.insertOrUpdate(newAlert)
+            viewModel.insertOrUpdate(newAlert)
         }else{
             alert.alertTime = timeLbl.text.toString()
             alert. alertDay = daysEn.toString()
@@ -172,7 +174,7 @@ class AddAlertActivity : AppCompatActivity() {
             alert.start = 0L
             alert. end = 0L
             alert.description = ""
-            //viewModel.insertOrUpdate(alert)
+            viewModel.insertOrUpdate(alert)
         }
         finish()
     }

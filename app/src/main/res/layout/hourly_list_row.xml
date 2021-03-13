@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
         android:text="TextView"
-        android:textColor="#FFFFFF"
+        android:textColor="#F44336"
         android:textSize="12sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/hourlyStatusImage"

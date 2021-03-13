@@ -28,7 +28,7 @@ class AlertActivity : AppCompatActivity() {
     lateinit var alertNavbar: BottomNavigationView
 
     private var alertRecyclerViewAdapter = AlertRecyclerViewAdapter(arrayListOf())
-    //private lateinit var viewModel: AlertViewModel
+    private lateinit var viewModel: AlertViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,8 +44,8 @@ class AlertActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        //viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
-        //observeViewModel(viewModel)
+        viewModel = ViewModelProvider(this).get(AlertViewModel::class.java)
+        observeViewModel(viewModel)
 
         initRecyclerViewList()
         navBarMenuAction()
@@ -53,7 +53,7 @@ class AlertActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // viewModel.getAll()
+         viewModel.getAll()
     }
 
     override fun onBackPressed() {
@@ -66,21 +66,21 @@ class AlertActivity : AppCompatActivity() {
             adapter = alertRecyclerViewAdapter
         }
 
-        val newAlert = Alert()
-        newAlert.alertTime = "07:00"
-        newAlert. alertDay = "MON,TUE"
-        newAlert. alertDayAr = "الاثنين,الثلاثاء"
-        newAlert.alertEvent = 0
-        newAlert. alertType = 1
-        newAlert.  enabled = true
-        newAlert. event = ""
-        newAlert.start = 0L
-        newAlert. end = 0L
-        newAlert.description = ""
-        val data = listOf(newAlert)
-        alertRecyclerViewAdapter.updateList(data)
-
-        //viewModel.insertOrUpdate(newAlert)
+//        val newAlert = Alert()
+//        newAlert.alertTime = "07:00"
+//        newAlert. alertDay = "MON,TUE"
+//        newAlert. alertDayAr = "الاثنين,الثلاثاء"
+//        newAlert.alertEvent = 0
+//        newAlert. alertType = 1
+//        newAlert.  enabled = true
+//        newAlert. event = ""
+//        newAlert.start = 0L
+//        newAlert. end = 0L
+//        newAlert.description = ""
+//        val data = listOf(newAlert)
+//        alertRecyclerViewAdapter.updateList(data)
+//
+//        //viewModel.insertOrUpdate(newAlert)
     }
 
     private fun observeViewModel(viewModel: AlertViewModel) {
@@ -90,7 +90,7 @@ class AlertActivity : AppCompatActivity() {
     }
 
     private fun updateUI(data: List<Alert>) {
-        alertRecyclerViewAdapter.updateList(data)
+        alertRecyclerViewAdapter.updateList(data, viewModel)
         println(data)
     }
 

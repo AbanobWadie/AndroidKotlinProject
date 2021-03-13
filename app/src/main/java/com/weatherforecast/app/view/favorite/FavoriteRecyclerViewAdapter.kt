@@ -21,8 +21,8 @@ class FavoriteRecyclerViewAdapter(var favoriteData: ArrayList<Favorite>): Recycl
     lateinit var context: Context
     lateinit var viewModel: FavoriteViewModel
 
-    fun updateList(newList: List<Favorite>/*, viewModel: FavoriteViewModel*/) {
-        //this.viewModel = viewModel
+    fun updateList(newList: List<Favorite>, viewModel: FavoriteViewModel) {
+        this.viewModel = viewModel
 
         favoriteData.clear()
         favoriteData.addAll(newList)
@@ -58,7 +58,7 @@ class FavoriteRecyclerViewAdapter(var favoriteData: ArrayList<Favorite>): Recycl
                 builder.setMessage(adapter.context.getText(R.string.WarningMsg))
 
                 builder.setPositiveButton(adapter.context.getText(R.string.yes)) { _, _ ->
-                    //adapter.viewModel.delete(favorite)
+                    adapter.viewModel.delete(favorite)
                     adapter.favoriteData.remove(favorite)
                     adapter.notifyDataSetChanged()
                 }

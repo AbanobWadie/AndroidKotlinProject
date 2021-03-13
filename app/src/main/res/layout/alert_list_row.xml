@@ -3,97 +3,109 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/border_recycler">
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/alertTypeLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="10dp"
-        android:text="TextView"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/alertSwitch"
-        app:layout_constraintTop_toBottomOf="@+id/alertSwitch" />
-
-    <Button
-        android:id="@+id/updateButton"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="10dp"
-        android:background="@drawable/ic_pencil"
-        app:backgroundTint="#009688"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/alertEventLbl"
-        app:layout_constraintEnd_toStartOf="@+id/deleteButton"
-        app:layout_constraintTop_toTopOf="@+id/alertTimeLbl"
-        app:layout_constraintVertical_bias="0.52" />
-
-    <TextView
-        android:id="@+id/alertTimeLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        android:text="TextView"
-        android:textColor="#FFFFFF"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/alertDayLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="5dp"
-        android:text="TextView"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/alertTimeLbl"
-        app:layout_constraintTop_toBottomOf="@+id/alertTimeLbl" />
-
-    <Switch
-        android:id="@+id/alertSwitch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="20dp"
-        android:checked="false"
-        android:textColorHighlight="#EE3B5961"
-        android:textColorLink="#EE3B5961"
-        app:layout_constraintBottom_toBottomOf="@+id/alertDayLbl"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/alertTimeLbl" />
-
-    <Button
-        android:id="@+id/deleteButton"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="30dp"
-        android:background="@drawable/ic_remove"
-        android:foreground="@drawable/ic_remove"
-        app:backgroundTint="#015291"
-        app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="@+id/updateButton"
-        app:layout_constraintEnd_toStartOf="@+id/alertSwitch"
-        app:layout_constraintTop_toTopOf="@+id/updateButton"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/alertEventLbl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="4dp"
         android:layout_marginBottom="10dp"
-        android:text="TextView"
-        android:textColor="#FFFFFF"
-        android:textSize="12sp"
+        android:background="@drawable/border_recycler"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/alertTimeLbl"
-        app:layout_constraintTop_toBottomOf="@+id/alertDayLbl" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/alertTypeLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:layout_marginBottom="10dp"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/alertSwitch"
+            app:layout_constraintTop_toBottomOf="@+id/alertSwitch" />
+
+        <Button
+            android:id="@+id/updateButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/ic_pencil"
+            app:backgroundTint="#009688"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="@+id/alertEventLbl"
+            app:layout_constraintEnd_toStartOf="@+id/deleteButton"
+            app:layout_constraintTop_toTopOf="@+id/alertTimeLbl"
+            app:layout_constraintVertical_bias="0.52" />
+
+        <TextView
+            android:id="@+id/alertTimeLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/alertDayLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/alertTimeLbl"
+            app:layout_constraintTop_toBottomOf="@+id/alertTimeLbl" />
+
+        <Switch
+            android:id="@+id/alertSwitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:checked="false"
+            android:textColorHighlight="#EE3B5961"
+            android:textColorLink="#EE3B5961"
+            app:layout_constraintBottom_toBottomOf="@+id/alertDayLbl"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/alertTimeLbl" />
+
+        <Button
+            android:id="@+id/deleteButton"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/ic_remove"
+            android:foreground="@drawable/ic_remove"
+            app:backgroundTint="#015291"
+            app:fabSize="normal"
+            app:layout_constraintBottom_toBottomOf="@+id/updateButton"
+            app:layout_constraintEnd_toStartOf="@+id/alertSwitch"
+            app:layout_constraintTop_toTopOf="@+id/updateButton"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/alertEventLbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="10dp"
+            android:text="TextView"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/alertTimeLbl"
+            app:layout_constraintTop_toBottomOf="@+id/alertDayLbl" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

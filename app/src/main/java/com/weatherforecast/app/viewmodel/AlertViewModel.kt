@@ -39,17 +39,17 @@ class AlertViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getSome(alertTime: String, enabled: Boolean){
-        val coroutineExceptionHandler = CoroutineExceptionHandler{  _, th ->
-            error.postValue(th.localizedMessage)
-        }
-        CoroutineScope(Dispatchers.IO + coroutineExceptionHandler).launch {
-            val data = alertDao.getSome(alertTime, enabled)
-            withContext(Dispatchers.Main) {
-                alertSomeInfo.postValue(data)
-            }
-        }
-    }
+//    fun getSome(alertTime: String, enabled: Boolean){
+//        val coroutineExceptionHandler = CoroutineExceptionHandler{  _, th ->
+//            error.postValue(th.localizedMessage)
+//        }
+//        CoroutineScope(Dispatchers.IO + coroutineExceptionHandler).launch {
+//            val data = alertDao.getSome(alertTime, enabled)
+//            withContext(Dispatchers.Main) {
+//                alertSomeInfo.postValue(data)
+//            }
+//        }
+//    }
 
     fun delete(alert: Alert){
         val coroutineExceptionHandler = CoroutineExceptionHandler{  _, th ->

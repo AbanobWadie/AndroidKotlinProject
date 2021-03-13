@@ -7,7 +7,7 @@
         android:id="@+id/backgroundImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="1"
+        android:alpha="0.3"
         android:foreground="#7A183C45"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/background" />
@@ -20,7 +20,6 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="30dp"
-        android:background="@drawable/border_recycler"
         app:layout_constraintBottom_toTopOf="@+id/settingsNavBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
