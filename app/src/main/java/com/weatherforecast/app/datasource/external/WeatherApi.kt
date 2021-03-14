@@ -1,4 +1,4 @@
-package com.weatherforecast.app.model.datasource.external
+package com.weatherforecast.app.datasource.external
 
 import com.weatherforecast.app.model.WeatherInfo
 import retrofit2.Response

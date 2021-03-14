@@ -59,7 +59,8 @@ class MainActivity() : AppCompatActivity() {
     private lateinit var hourlyRecyclerView: RecyclerView
     private lateinit var dailyTitle: TextView
     private lateinit var dailyRecyclerView: RecyclerView
-    private lateinit var loading: ProgressBar
+    //private lateinit var loading: ProgressBar
+    private lateinit var loading: ImageView
     private lateinit var homeNavBar: BottomNavigationView
 
     private var weatherRecyclerViewAdapter = WeatherRecyclerViewAdapter(arrayListOf())
@@ -88,7 +89,8 @@ class MainActivity() : AppCompatActivity() {
         hourlyRecyclerView = findViewById(R.id.hourlyRecyclerView)
         dailyTitle = findViewById(R.id.dailyTitle)
         dailyRecyclerView = findViewById(R.id.dailyRecyclerView)
-        loading = findViewById(R.id.homeProgressBar)
+        //loading = findViewById(R.id.homeProgressBar)
+        loading = findViewById(R.id.loadingGif)
         homeNavBar = findViewById(R.id.homeNavBar)
 
         viewModel = ViewModelProvider(this).get(WeatherViewModel::class.java)
@@ -134,7 +136,6 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun setViewModel(lat: Double, lon: Double){
-        //viewModel.getData(33.441792, -94.037689, "metric", "current,minutely,hourly,alerts", "67bc71589f11ab9e108b887f0bab9bfc")
         viewModel.getData(lat, lon, unit, "minutely,alerts", language, "67bc71589f11ab9e108b887f0bab9bfc")
     }
 
@@ -260,6 +261,10 @@ class MainActivity() : AppCompatActivity() {
     }
 
     private fun setup() {
+        Glide.with(this)
+            .load(R.drawable.f3d095bd91b9ffbe895bad8d_rw_1200)
+            .into(loading)
+
         val intent = Intent(this, AlertService::class.java)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             //startForegroundService(intent)

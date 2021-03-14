@@ -65,22 +65,6 @@ class AlertActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = alertRecyclerViewAdapter
         }
-
-//        val newAlert = Alert()
-//        newAlert.alertTime = "07:00"
-//        newAlert. alertDay = "MON,TUE"
-//        newAlert. alertDayAr = "الاثنين,الثلاثاء"
-//        newAlert.alertEvent = 0
-//        newAlert. alertType = 1
-//        newAlert.  enabled = true
-//        newAlert. event = ""
-//        newAlert.start = 0L
-//        newAlert. end = 0L
-//        newAlert.description = ""
-//        val data = listOf(newAlert)
-//        alertRecyclerViewAdapter.updateList(data)
-//
-//        //viewModel.insertOrUpdate(newAlert)
     }
 
     private fun observeViewModel(viewModel: AlertViewModel) {
@@ -111,16 +95,6 @@ class AlertActivity : AppCompatActivity() {
                 "OK", Toast.LENGTH_SHORT
             ).show()
         }
-
-//        builder.setNegativeButton("No") { dialog, which ->
-//            Toast.makeText(applicationContext,
-//                    "No", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        builder.setNeutralButton("Maybe") { dialog, which ->
-//            Toast.makeText(applicationContext,
-//                    "Maybe", Toast.LENGTH_SHORT).show()
-//        }
         builder.show()
     }
 

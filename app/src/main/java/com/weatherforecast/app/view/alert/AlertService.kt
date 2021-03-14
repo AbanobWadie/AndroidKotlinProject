@@ -26,8 +26,6 @@ class AlertService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i("call", "11111111111111111111111111111111111111111111111111")
-
         showForegroundNotification("title", "body")
         sendBroadcast()
         // If we get killed, after returning from here, restart
@@ -53,7 +51,6 @@ class AlertService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i("call", "22222222222222222222222222222222222222222222222222222222")
         unregisterReceiver(myReceiver)
     }
 
@@ -67,7 +64,7 @@ class AlertService : Service() {
         val mNotifyManager = this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name: CharSequence = this.getString(R.string.channel_name)
-            val description: String = this.getString(R.string.channel_description) //user visible
+            val description: String = this.getString(R.string.channel_description)
             val importance = NotificationManager.IMPORTANCE_LOW
             val att = AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)
@@ -106,7 +103,6 @@ class AlertService : Service() {
     }
 
     private fun sendBroadcast() {
-        //val intentFilter = IntentFilter(Intent.ACTION_DATE_CHANGED)
         val intentFilter = IntentFilter(Intent.ACTION_TIME_TICK)
         registerReceiver(myReceiver, intentFilter)
     }

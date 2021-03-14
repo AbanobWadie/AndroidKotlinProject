@@ -69,7 +69,6 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
 
             alertSwitch.isChecked = alert.enabled
 
-            //val str = StringBuilder()
             if(alert.alertDay  == "ALL"){
                 alertDayLbl.text = adapter.context.getText(R.string.EveryDay)
             }else if (alert.alertDay == "WEEKEND"){
@@ -77,11 +76,6 @@ class AlertRecyclerViewAdapter(var alertData: ArrayList<Alert>): RecyclerView.Ad
             }else if (alert.alertDay == "NONE"){
                 alertDayLbl.text = adapter.context.getText(R.string.NoRepeat)
             }else{
-//                for (day in alert.alertDay){
-//                    str.append("$day,")
-//                }
-//                str.deleteCharAt(str.lastIndex)
-
                 val pref = PreferenceManager.getDefaultSharedPreferences(adapter.context.applicationContext)
                 val language = pref.getString("language", "en")!!
 

@@ -1,7 +1,6 @@
-package com.weatherforecast.app.model.datasource.internal
+package com.weatherforecast.app.datasource.internal
 
 import androidx.room.*
-import com.weatherforecast.app.model.Alert
 import com.weatherforecast.app.model.Favorite
 
 @Dao

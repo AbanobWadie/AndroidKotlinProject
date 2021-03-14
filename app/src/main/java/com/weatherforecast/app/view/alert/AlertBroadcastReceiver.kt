@@ -12,7 +12,6 @@ import android.content.Intent.ACTION_TIME_TICK
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.os.Build
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.WindowManager
@@ -20,13 +19,12 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.TypedArrayUtils.getText
 import androidx.preference.PreferenceManager
 import com.weatherforecast.app.R
 import com.weatherforecast.app.model.Alert
-import com.weatherforecast.app.model.datasource.external.WeatherService
-import com.weatherforecast.app.model.datasource.internal.AlertDao
-import com.weatherforecast.app.model.datasource.internal.AppDatabase
+import com.weatherforecast.app.datasource.external.WeatherService
+import com.weatherforecast.app.datasource.internal.AlertDao
+import com.weatherforecast.app.datasource.internal.AppDatabase
 import com.weatherforecast.app.view.main.MainActivity
 import kotlinx.coroutines.*
 import java.util.*
@@ -38,10 +36,8 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
     private val CHANNEL_ID = "1"
 
     override fun onReceive(p0: Context?, p1: Intent?) {
-        Log.i("call", "11111111111111111111111111111111111111111111111111")
         when (p1?.action) {
-            //ACTION_DATE_CHANGED  -> getAlert()
-            //ACTION_TIME_TICK -> getDatabaseAlert(p0!!)
+            ACTION_TIME_TICK -> getDatabaseAlert(p0!!)
         }
     }
 
@@ -63,14 +59,6 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
                 }
             }
         }
-
-//        val newAlert = Alert()
-//        newAlert. event = "Temp"
-//        newAlert.start = 0L
-//        newAlert. end = 0L
-//        newAlert.description = "heat heat heat"
-//        val data = listOf(newAlert)
-//        checkAlert(context, databaseData, data)
     }
 
     private fun getDatabaseAlert(context: Context) {
@@ -87,21 +75,6 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
                 }
             }
         }
-
-//        val newAlert = Alert()
-//        newAlert.alertTime = "19:55"
-//        newAlert. alertDay = "MON,TUE"
-//        newAlert. alertDayAr = "الاثنين,الثلاثاء"
-//        newAlert.alertEvent = 0
-//        newAlert. alertType = 0
-//        newAlert.  enabled = true
-//        newAlert. event = ""
-//        newAlert.start = 0L
-//        newAlert. end = 0L
-//        newAlert.description = ""
-//
-//        val data = listOf(newAlert)
-//        getApiAlert(context, data)
     }
 
     private fun checkAlert(context: Context, databaseAlertInfo: List<Alert>, apiAlertInfo: List<Alert>) {
@@ -205,7 +178,7 @@ class AlertBroadcastReceiver: BroadcastReceiver() {
         val mNotifyManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val name: CharSequence = context.getString(R.string.channel_name)
-            val description: String = context.getString(R.string.channel_description) //user visible
+            val description: String = context.getString(R.string.channel_description)
             val importance = NotificationManager.IMPORTANCE_LOW
             val att = AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_NOTIFICATION)

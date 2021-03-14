@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.weatherforecast.app.model.Favorite
-import com.weatherforecast.app.model.datasource.internal.AppDatabase
-import com.weatherforecast.app.model.datasource.internal.FavoriteDao
+import com.weatherforecast.app.datasource.internal.AppDatabase
+import com.weatherforecast.app.datasource.internal.FavoriteDao
 import kotlinx.coroutines.*
 
 class FavoriteViewModel(application: Application): AndroidViewModel(application) {

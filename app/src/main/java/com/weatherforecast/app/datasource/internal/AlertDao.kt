@@ -1,11 +1,7 @@
-package com.weatherforecast.app.model.datasource.internal
+package com.weatherforecast.app.datasource.internal
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.weatherforecast.app.model.Alert
-import com.weatherforecast.app.model.Day
-import retrofit2.Response
 
 @Dao
 interface AlertDao {

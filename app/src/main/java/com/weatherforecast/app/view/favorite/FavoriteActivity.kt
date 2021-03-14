@@ -61,20 +61,6 @@ class FavoriteActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(applicationContext)
             adapter = favoriteRecyclerViewAdapter
         }
-
-//        val newFavorite = Favorite()
-//        newFavorite.title = "chicago"
-//        newFavorite.lat = 33.441792
-//        newFavorite.lon = -94.037689
-//
-//        val newFavorite2 = Favorite()
-//        newFavorite2.title = "istanbul"
-//        newFavorite2.lat = 41.0082
-//        newFavorite2.lon = 0.0
-//        val data = listOf(newFavorite, newFavorite2)
-//        favoriteRecyclerViewAdapter.updateList(data)
-//
-//        //viewModel.insertOrUpdate(newAlert)
     }
 
     private fun observeViewModel(viewModel: FavoriteViewModel) {
@@ -99,16 +85,6 @@ class FavoriteActivity : AppCompatActivity() {
                 "OK", Toast.LENGTH_SHORT
             ).show()
         }
-
-//        builder.setNegativeButton("No") { dialog, which ->
-//            Toast.makeText(applicationContext,
-//                    "No", Toast.LENGTH_SHORT).show()
-//        }
-//
-//        builder.setNeutralButton("Maybe") { dialog, which ->
-//            Toast.makeText(applicationContext,
-//                    "Maybe", Toast.LENGTH_SHORT).show()
-//        }
         builder.show()
     }
 

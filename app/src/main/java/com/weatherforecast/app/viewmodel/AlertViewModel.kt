@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.weatherforecast.app.model.Alert
-import com.weatherforecast.app.model.datasource.internal.AlertDao
-import com.weatherforecast.app.model.datasource.internal.AppDatabase
+import com.weatherforecast.app.datasource.internal.AlertDao
+import com.weatherforecast.app.datasource.internal.AppDatabase
 import kotlinx.coroutines.*
 
 class AlertViewModel(application: Application) : AndroidViewModel(application) {
