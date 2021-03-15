@@ -50,7 +50,7 @@
             android:layout_height="30dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/border_recycler"
+            android:background="@drawable/cardview_border"
             android:entries="@array/alertType"
             android:theme="@style/spinnerTheme"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,13 +61,13 @@
             android:id="@+id/friCheckBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:text="@string/friday"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/tueCheckBox"
-            app:layout_constraintTop_toTopOf="@+id/tueCheckBox" />
+            app:layout_constraintStart_toEndOf="@+id/thuCheckBox"
+            app:layout_constraintTop_toTopOf="@+id/thuCheckBox" />
 
         <CheckBox
             android:id="@+id/satCheckBox"
@@ -112,10 +112,10 @@
             android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
-            android:background="@drawable/border_recycler"
+            android:background="@drawable/cardview_border"
             android:text="00:00"
             android:textAlignment="center"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="18sp"
             app:layout_constraintStart_toStartOf="@+id/textView4"
             app:layout_constraintTop_toBottomOf="@+id/textView4" />
@@ -129,8 +129,8 @@
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/wedCheckBox"
-            app:layout_constraintTop_toTopOf="@+id/wedCheckBox" />
+            app:layout_constraintStart_toEndOf="@+id/monCheckBox"
+            app:layout_constraintTop_toTopOf="@+id/monCheckBox" />
 
         <CheckBox
             android:id="@+id/thuCheckBox"
@@ -141,8 +141,8 @@
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF"
             android:textSize="12sp"
-            app:layout_constraintStart_toEndOf="@+id/monCheckBox"
-            app:layout_constraintTop_toTopOf="@+id/monCheckBox" />
+            app:layout_constraintStart_toEndOf="@+id/wedCheckBox"
+            app:layout_constraintTop_toTopOf="@+id/wedCheckBox" />
 
         <TextView
             android:id="@+id/textView"
@@ -195,7 +195,7 @@
             android:layout_height="30dp"
             android:layout_marginTop="6dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/border_recycler"
+            android:background="@drawable/cardview_border"
             android:entries="@array/alertEvent"
             android:theme="@style/spinnerTheme"
             app:layout_constraintEnd_toEndOf="parent"

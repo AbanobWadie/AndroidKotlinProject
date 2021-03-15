@@ -28,13 +28,14 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/alertSwitch"
-            app:layout_constraintTop_toBottomOf="@+id/alertSwitch" />
+            app:layout_constraintTop_toBottomOf="@+id/alertSwitch"
+            tools:text="notification" />
 
         <Button
             android:id="@+id/updateButton"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/ic_pencil"
             app:backgroundTint="#009688"
             app:fabSize="normal"
@@ -47,7 +48,7 @@
             android:id="@+id/alertTimeLbl"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:text="TextView"
             android:textColor="#FFFFFF"
@@ -57,13 +58,14 @@
 
         <TextView
             android:id="@+id/alertDayLbl"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:text="TextView"
             android:textColor="#FFFFFF"
             android:textSize="12sp"
+            app:layout_constraintEnd_toStartOf="@+id/updateButton"
             app:layout_constraintStart_toStartOf="@+id/alertTimeLbl"
             app:layout_constraintTop_toBottomOf="@+id/alertTimeLbl" />
 
@@ -83,7 +85,7 @@
             android:id="@+id/deleteButton"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/ic_remove"
             android:foreground="@drawable/ic_remove"
             app:backgroundTint="#015291"

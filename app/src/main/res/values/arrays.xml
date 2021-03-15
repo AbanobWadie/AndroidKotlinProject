@@ -36,8 +36,8 @@
 
     <!-- alert event -->
     <string-array name="alertEvent">
-        <item>Temp</item>
-        <item>Wind</item>
+        <item>Heat Advisory</item>
+        <item>Lake Wind Advisory</item>
     </string-array>
 
     <!-- alert type -->

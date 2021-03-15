@@ -132,7 +132,7 @@ class MainDetailsActivity : AppCompatActivity() {
         val pref = PreferenceManager.getDefaultSharedPreferences(this)
         when (pref.getString("unit", "metric")!!) {
             "imperial" -> {
-                detailsTempLbl.text = daily.temp.day.toInt().toString() + "/" + daily.temp.night.toInt().toString() + " ${getText(R.string.fahrenheit)}/"
+                detailsTempLbl.text = daily.temp.day.toInt().toString() + "/" + daily.temp.night.toInt().toString() + " ${getText(R.string.fahrenheit)}"
                 firstValueLbl.text = daily.feels_like.day.toInt().toString() + "/" + daily.feels_like.night.toInt().toString() + " ${getText(R.string.fahrenheit)}"
                 secondValueLbl.text = daily.wind_speed.toInt().toString() + " ${getText(R.string.mileshour)}"
                 fifthValueLbl.text = daily.dew_point.toInt().toString() + " ${getText(R.string.fahrenheit)}"
